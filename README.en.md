@@ -2,7 +2,7 @@
 
 **[中文](README.md)** | English
 
-Real-time translation of Microsoft Teams live captions — directly in your browser. TeamLingo monitors the caption feed in Teams Web meetings, waits for each sentence to stabilize, then sends it to a translation API and displays the result in a floating side window.
+Real-time translation of Microsoft Teams live captions for Microsoft Edge browser (Windows, macOS, Linux). TeamLingo monitors the caption feed in Teams Web meetings, waits for each sentence to stabilize, then sends it to a translation API and displays the result in a floating side window.
 
 **Author:** Amoiensis (Xiping Yu) · **License:** MIT
 

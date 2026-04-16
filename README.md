@@ -2,7 +2,7 @@
 
 中文 | **[English](README.en.md)**
 
-Edge for Mac 的 Teams Web 实时字幕翻译扩展原型。TeamLingo 监听 Teams 页面里的实时字幕，在某句话稳定一段时间后调用 OpenAI-compatible API，并把译文显示在页面右侧悬浮窗口中。
+Microsoft Edge 浏览器的 Teams Web 实时字幕翻译扩展。TeamLingo 监听 Teams 页面里的实时字幕，在某句话稳定一段时间后调用 OpenAI-compatible API，并把译文显示在页面右侧悬浮窗口中。
 
 **作者：** Amoiensis (Xiping Yu) · **许可证：** MIT
 
