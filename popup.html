@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="popup.pageTitle">TeamLingo</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="popup">
+      <h1 data-i18n="popup.title">TeamLingo</h1>
+      <label class="toggle">
+        <input id="enabled" type="checkbox">
+        <span data-i18n="popup.enabled">启用</span>
+      </label>
+      <div id="status" class="status"></div>
+      <button id="options" type="button" data-i18n="popup.options">API 配置</button>
+    </main>
+    <script src="ui-i18n.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

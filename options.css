@@ -1,0 +1,161 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: #172033;
+  background: #f6f7fb;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.page {
+  width: min(760px, calc(100vw - 32px));
+  margin: 32px auto;
+}
+
+.header {
+  margin-bottom: 18px;
+}
+
+.header h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  letter-spacing: 0;
+}
+
+.header p {
+  margin: 0;
+  color: #526070;
+}
+
+.form {
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #d9e0ea;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(19, 31, 55, 0.08);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+  color: #293447;
+  font-weight: 620;
+}
+
+.field small {
+  color: #6b7686;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.field-inline {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  font-weight: 560;
+}
+
+.align-bottom {
+  align-self: end;
+  min-height: 68px;
+}
+
+input[type="text"],
+input[type="url"],
+input[type="password"],
+input[type="number"],
+select {
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  color: #111827;
+  background: #ffffff;
+  border: 1px solid #b8c2d1;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 400;
+}
+
+select {
+  appearance: auto;
+}
+
+.custom-language {
+  margin-top: 0;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+input:focus,
+select:focus {
+  border-color: #2563eb;
+  outline: 2px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 1px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+button {
+  min-height: 38px;
+  padding: 8px 14px;
+  color: #ffffff;
+  background: #185abd;
+  border: 1px solid #185abd;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+}
+
+button:hover {
+  background: #134a9f;
+}
+
+button.secondary {
+  color: #185abd;
+  background: #ffffff;
+}
+
+button.secondary:hover {
+  background: #edf4ff;
+}
+
+.message {
+  min-height: 22px;
+  margin-top: 14px;
+  color: #25603c;
+}
+
+.message.error {
+  color: #b42318;
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .page {
+    margin: 18px auto;
+  }
+}
