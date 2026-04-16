@@ -159,3 +159,52 @@ button.secondary:hover {
     margin: 18px auto;
   }
 }
+
+/* Header logo + title row */
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.header-row h1 {
+  margin: 0 0 4px;
+  font-size: 24px;
+  letter-spacing: 0;
+}
+
+.header-row p {
+  margin: 0;
+  color: #526070;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  padding: 10px 20px;
+  color: #8896a6;
+  font-size: 12px;
+}
+
+.footer-version {
+  font-weight: 500;
+}
+
+.footer-link {
+  color: #526070;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: #185abd;
+  text-decoration: underline;
+}

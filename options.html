@@ -9,8 +9,13 @@
   <body>
     <main class="page">
       <header class="header">
-        <h1 data-i18n="options.headerTitle">TeamsLingo 配置</h1>
-        <p data-i18n="options.headerDescription">配置 OpenAI-compatible API 后，在 Teams Web 会议中自动翻译实时字幕。</p>
+        <div class="header-row">
+          <img src="icons/icon128.png" alt="TeamsLingo" class="header-logo">
+          <div>
+            <h1 data-i18n="options.headerTitle">TeamsLingo 配置</h1>
+            <p data-i18n="options.headerDescription">配置 OpenAI-compatible API 后，在 Teams Web 会议中自动翻译实时字幕。</p>
+          </div>
+        </div>
       </header>
 
       <form id="settings-form" class="form">
@@ -134,6 +139,11 @@
 
         <div id="message" class="message" role="status" aria-live="polite"></div>
       </form>
+
+    <footer class="footer">
+      <span class="footer-version">v1.0.0</span>
+      <a href="https://github.com/Amoiensis/TeamsLingo" target="_blank" rel="noopener" class="footer-link">GitHub</a>
+    </footer>
     </main>
     <script src="ui-i18n.js"></script>
     <script src="languages.js"></script>
