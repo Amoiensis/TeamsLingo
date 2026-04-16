@@ -1,10 +1,11 @@
-# TeamLingo
+# TeamsLingo
+
+<img src="TeamsLingo_3D.png" width="160" align="right" />
 
 中文 | **[English](README.en.md)**
 
-Microsoft Edge 浏览器的 Teams Web 实时字幕翻译扩展。TeamLingo 监听 Teams 页面中的实时字幕，调用翻译 API 进行翻译，译文同步显示在原文字幕旁及页面右侧悬浮窗口中，并支持会议字幕与译文的导出。
+Microsoft Edge 浏览器的 Teams Web 实时字幕翻译扩展。TeamsLingo 监听 Teams 页面中的实时字幕，调用翻译 API 进行翻译，译文同步显示在原文字幕旁及页面右侧悬浮窗口中，并支持会议字幕与译文的导出。
 
-**作者：** Amoiensis (Xiping Yu) · **许可证：** MIT
 
 ---
 
@@ -124,9 +125,9 @@ Microsoft Region: 按 Azure 资源填写；全局单服务 Translator 可留空
 
 ## 隐私
 
-TeamLingo 不收集、存储或传输任何个人数据。详见 [PRIVACY_POLICY.md](PRIVACY_POLICY.md)。
+TeamsLingo 不收集、存储或传输任何个人数据。详见 [PRIVACY_POLICY.md](PRIVACY_POLICY.md)。
 
 ## 链接
 
-- **GitHub：** https://github.com/Amoiensis/TeamLingo
-- **Issues：** https://github.com/Amoiensis/TeamLingo/issues
+- **GitHub：** https://github.com/Amoiensis/TeamsLingo
+- **Issues：** https://github.com/Amoiensis/TeamsLingo/issues

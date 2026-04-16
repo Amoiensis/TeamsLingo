@@ -1,10 +1,11 @@
-# TeamLingo
+# TeamsLingo
 
 **[中文](README.md)** | English
 
-Real-time translation of Microsoft Teams live captions for Microsoft Edge browser (Windows, macOS, Linux). TeamLingo monitors the caption feed in Teams Web meetings, sends each sentence to a translation API, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
+<img src="TeamsLingo_3D.png" width="160" align="right" />
 
-**Author:** Amoiensis (Xiping Yu) · **License:** MIT
+Real-time translation of Microsoft Teams live captions for Microsoft Edge browser (Windows, macOS, Linux). TeamsLingo monitors the caption feed in Teams Web meetings, sends each sentence to a translation API, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
+
 
 ---
 
@@ -22,7 +23,7 @@ Real-time translation of Microsoft Teams live captions for Microsoft Edge browse
 
 ## API Configuration
 
-TeamLingo supports three types of translation services.
+TeamsLingo supports three types of translation services.
 
 ### OpenAI-compatible / Poe
 
@@ -128,9 +129,9 @@ The extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specif
 
 ## Privacy
 
-TeamLingo does not collect, store, or transmit any personal data. See [PRIVACY_POLICY.md](PRIVACY_POLICY.md) for full details.
+TeamsLingo does not collect, store, or transmit any personal data. See [PRIVACY_POLICY.md](PRIVACY_POLICY.md) for full details.
 
 ## Links
 
-- **GitHub:** https://github.com/Amoiensis/TeamLingo
-- **Issues:** https://github.com/Amoiensis/TeamLingo/issues
+- **GitHub:** https://github.com/Amoiensis/TeamsLingo
+- **Issues:** https://github.com/Amoiensis/TeamsLingo/issues

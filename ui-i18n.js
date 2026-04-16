@@ -6,9 +6,9 @@
         custom: "自定义"
       },
       options: {
-        pageTitle: "TeamLingo 配置",
-        headerTitle: "TeamLingo 配置",
-        headerDescription: "为 TeamLingo 配置 OpenAI-compatible API 后，即可在 Teams Web 会议中自动翻译实时字幕。",
+        pageTitle: "TeamsLingo 配置",
+        headerTitle: "TeamsLingo 配置",
+        headerDescription: "为 TeamsLingo 配置 OpenAI-compatible API 后，即可在 Teams Web 会议中自动翻译实时字幕。",
         enabled: "启用自动翻译",
         uiLanguage: "界面语言 / Interface language",
         uiLanguageZh: "中文 / Chinese",
@@ -51,16 +51,16 @@
         testFailure: "测试失败。"
       },
       popup: {
-        pageTitle: "TeamLingo",
-        title: "TeamLingo",
+        pageTitle: "TeamsLingo",
+        title: "TeamsLingo",
         enabled: "启用",
         options: "API 配置",
         statusPaused: "当前已暂停。",
         statusNeedApi: "需要配置 API。"
       },
       panel: {
-        ariaLabel: "TeamLingo caption translation panel",
-        title: "TeamLingo",
+        ariaLabel: "TeamsLingo caption translation panel",
+        title: "TeamsLingo",
         initializing: "正在初始化",
         waiting: "等待 Teams 实时字幕",
         togglePause: "暂停翻译",
@@ -84,7 +84,7 @@
         pendingTranslation: "翻译中...",
         inlineTranslationFailed: "翻译失败",
         unknownSpeaker: "未知发言人",
-        exportTranscriptTitle: "TeamLingo 字幕记录",
+        exportTranscriptTitle: "TeamsLingo 字幕记录",
         exportTime: "导出时间",
         exportContent: "导出内容",
         exportContentSource: "仅原文",
@@ -101,9 +101,9 @@
         custom: "Custom"
       },
       options: {
-        pageTitle: "TeamLingo Settings",
-        headerTitle: "TeamLingo Settings",
-        headerDescription: "Configure an OpenAI-compatible API for TeamLingo to translate live captions automatically in Teams web meetings.",
+        pageTitle: "TeamsLingo Settings",
+        headerTitle: "TeamsLingo Settings",
+        headerDescription: "Configure an OpenAI-compatible API for TeamsLingo to translate live captions automatically in Teams web meetings.",
         enabled: "Enable automatic translation",
         uiLanguage: "Interface language / 界面语言",
         uiLanguageZh: "中文 / Chinese",
@@ -146,16 +146,16 @@
         testFailure: "Test failed."
       },
       popup: {
-        pageTitle: "TeamLingo",
-        title: "TeamLingo",
+        pageTitle: "TeamsLingo",
+        title: "TeamsLingo",
         enabled: "Enabled",
         options: "API settings",
         statusPaused: "Translation is paused.",
         statusNeedApi: "API configuration is required."
       },
       panel: {
-        ariaLabel: "TeamLingo caption translation panel",
-        title: "TeamLingo",
+        ariaLabel: "TeamsLingo caption translation panel",
+        title: "TeamsLingo",
         initializing: "Initializing",
         waiting: "Waiting for Teams live captions",
         togglePause: "Pause translation",
@@ -179,7 +179,7 @@
         pendingTranslation: "Translating...",
         inlineTranslationFailed: "Translation failed",
         unknownSpeaker: "Unknown speaker",
-        exportTranscriptTitle: "TeamLingo Caption Transcript",
+        exportTranscriptTitle: "TeamsLingo Caption Transcript",
         exportTime: "Exported at",
         exportContent: "Content",
         exportContentSource: "Source only",

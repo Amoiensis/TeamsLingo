@@ -1,6 +1,6 @@
-# TeamLingo — Edge Add-ons Publishing Guide
+# TeamsLingo — Edge Add-ons Publishing Guide
 
-This document provides everything needed to submit **TeamLingo** to the [Microsoft Edge Add-ons store](https://learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension) via Partner Center.
+This document provides everything needed to submit **TeamsLingo** to the [Microsoft Edge Add-ons store](https://learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension) via Partner Center.
 
 ---
 
@@ -59,14 +59,14 @@ icons/
 ## 3. Store Listing — English
 
 ### Extension name
-TeamLingo
+TeamsLingo
 
 ### Short description (132 chars max)
 Real-time translation of Microsoft Teams live captions. Supports OpenAI, Google Translate, and Microsoft Translator APIs.
 
 ### Detailed description
 
-**TeamLingo** brings real-time translation to Microsoft Teams live captions, displayed in a convenient floating side window during your meetings.
+**TeamsLingo** brings real-time translation to Microsoft Teams live captions, displayed in a convenient floating side window during your meetings.
 
 ### Features
 - **Real-time caption translation** — Monitors Teams live captions and translates each completed sentence automatically.
@@ -97,14 +97,14 @@ English, Chinese (Simplified)
 ## 4. Store Listing — 中文 (Chinese Simplified)
 
 ### 扩展名称
-TeamLingo — Teams 实时字幕翻译
+TeamsLingo — Teams 实时字幕翻译
 
 ### 简短描述
 为 Microsoft Teams 实时字幕提供即时翻译。支持 OpenAI、Google 翻译和微软翻译 API。
 
 ### 详细描述
 
-**TeamLingo** 为 Microsoft Teams 会议的实时字幕提供即时翻译，译文显示在页面右侧的悬浮窗口中，不遮挡会议内容。
+**TeamsLingo** 为 Microsoft Teams 会议的实时字幕提供即时翻译，译文显示在页面右侧的悬浮窗口中，不遮挡会议内容。
 
 ### 功能特点
 - **实时字幕翻译** — 监听 Teams 实时字幕，在一句话讲完后自动调用翻译 API。
@@ -129,9 +129,9 @@ TeamLingo — Teams 实时字幕翻译
 |---|---|
 | **Category** | Productivity |
 | **Privacy policy** | Yes — the extension sends caption text to user-configured external APIs |
-| **Privacy policy URL** | `https://github.com/Amoiensis/TeamLingo/blob/main/PRIVACY_POLICY.md` |
-| **Website URL** | `https://github.com/Amoiensis/TeamLingo` |
-| **Support contact** | `https://github.com/Amoiensis/TeamLingo/issues` |
+| **Privacy policy URL** | `https://github.com/Amoiensis/TeamsLingo/blob/main/PRIVACY_POLICY.md` |
+| **Website URL** | `https://github.com/Amoiensis/TeamsLingo` |
+| **Support contact** | `https://github.com/Amoiensis/TeamsLingo/issues` |
 | **Mature content** | No |
 
 ---
@@ -147,7 +147,7 @@ TeamLingo — Teams 实时字幕翻译
 
 ## 7. Testing Notes (for certification)
 
-> TeamLingo injects a content script into Microsoft Teams Web meeting pages (teams.microsoft.com and teams.live.com). It monitors the live caption DOM elements and sends caption text to a user-configured translation API endpoint when a sentence stabilizes.
+> TeamsLingo injects a content script into Microsoft Teams Web meeting pages (teams.microsoft.com and teams.live.com). It monitors the live caption DOM elements and sends caption text to a user-configured translation API endpoint when a sentence stabilizes.
 >
 > **To test:**
 > 1. Install the extension in Edge.
@@ -165,7 +165,7 @@ TeamLingo — Teams 实时字幕翻译
 
 1. Go to [Partner Center → Extensions](https://partner.microsoft.com/dashboard/microsoftedge/)
 2. Click **Create new extension**
-3. On the **Packages** page, upload `TeamLingo.zip`
+3. On the **Packages** page, upload `TeamsLingo.zip`
 4. On the **Availability** page, set Visibility to **Public**, Markets to **All**
 5. On the **Properties** page, fill in values from Section 5 above
 6. On the **Store Listings** page, add both English and Chinese (Simplified) listings using content from Sections 3–4
