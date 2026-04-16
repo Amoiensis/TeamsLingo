@@ -2,7 +2,7 @@
 
 中文 | **[English](README.en.md)**
 
-Microsoft Edge 浏览器的 Teams Web 实时字幕翻译扩展。TeamLingo 监听 Teams 页面里的实时字幕，在某句话稳定一段时间后调用 OpenAI-compatible API，并把译文显示在页面右侧悬浮窗口中。
+Microsoft Edge 浏览器的 Teams Web 实时字幕翻译扩展。TeamLingo 监听 Teams 页面中的实时字幕，调用翻译 API 进行翻译，译文同步显示在原文字幕旁及页面右侧悬浮窗口中，并支持会议字幕与译文的导出。
 
 **作者：** Amoiensis (Xiping Yu) · **许可证：** MIT
 
@@ -111,7 +111,7 @@ Microsoft Region: 按 Azure 资源填写；全局单服务 Translator 可留空
 - **多种翻译引擎** — 支持 OpenAI 兼容 API（包括 Poe）、Google Cloud Translation 和 Microsoft Translator。
 - **可配置语言对** — 可自动识别源语言，或固定为 Teams 支持的转写语言；目标语言支持多种常用语言。
 - **智能去重** — Teams 虚拟列表重绘时自动去重，避免重复翻译。
-- **简洁悬浮窗口** — 译文显示在侧边悬浮面板，不影响会议界面。
+- **双语对照显示** — 译文同步显示在原文字幕旁及侧边悬浮窗口中，方便对照阅读。
 - **双语界面** — 扩展界面支持中文和英文。
 - **隐私优先** — API 配置仅保存在本地，字幕文本仅发送至你配置的翻译 API，不经过任何第三方。
 
@@ -119,9 +119,8 @@ Microsoft Region: 按 Azure 资源填写；全局单服务 Translator 可留空
 
 ## 注意
 
-- 浏览器扩展只能运行在 Teams Web 页面中，不能注入 Mac 原生 Teams App。
+- 浏览器扩展只能运行在 Teams **Web** 页面（teams.microsoft.com / teams.live.com），不支持 Teams 桌面客户端。
 - 因为 Endpoint 可配置，扩展声明了较宽的 `http/https` host permission，用于后台脚本向你的翻译 API 发请求。
-- 如果要在本地 `.mhtml` 保存页上测试，需要在 Edge 扩展详情页里手动允许访问文件 URL；实际 Teams Web 会议不需要这一步。
 
 ## 隐私
 

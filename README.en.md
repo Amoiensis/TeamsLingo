@@ -2,7 +2,7 @@
 
 **[中文](README.md)** | English
 
-Real-time translation of Microsoft Teams live captions for Microsoft Edge browser (Windows, macOS, Linux). TeamLingo monitors the caption feed in Teams Web meetings, waits for each sentence to stabilize, then sends it to a translation API and displays the result in a floating side window.
+Real-time translation of Microsoft Teams live captions for Microsoft Edge browser (Windows, macOS, Linux). TeamLingo monitors the caption feed in Teams Web meetings, sends each sentence to a translation API, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
 
 **Author:** Amoiensis (Xiping Yu) · **License:** MIT
 
@@ -113,7 +113,7 @@ The extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specif
 - **Multiple translation engines** — Supports OpenAI-compatible APIs (including Poe), Google Cloud Translation, and Microsoft Translator.
 - **Configurable language pair** — Auto-detect or fix the source language; choose from a wide range of target languages.
 - **Smart deduplication** — Avoids redundant translations when Teams redraws its caption list.
-- **Clean floating UI** — Translations appear in a side panel that doesn't obstruct the meeting view.
+- **Side-by-side display** — Translations appear alongside original captions and in a floating side panel for easy comparison.
 - **Bilingual interface** — Extension UI available in English and 中文 (Chinese).
 - **Privacy-first** — All API configuration is stored locally. Caption text is sent only to the translation API you configure — no middlemen, no analytics.
 
@@ -121,9 +121,8 @@ The extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specif
 
 ## Notes
 
-- This browser extension only works on Teams **Web** pages — it cannot inject into the native Teams desktop app.
+- This extension only works on Teams **Web** pages (teams.microsoft.com / teams.live.com) — it does not support the Teams desktop client.
 - Because the translation API endpoint is fully user-configurable, the extension declares broad `http/https` host permissions so the background service worker can make requests to your chosen API.
-- To test on a local `.mhtml` saved page, you must manually enable **Allow access to file URLs** in the Edge extension details page. This is not needed for actual Teams Web meetings.
 
 ---
 
