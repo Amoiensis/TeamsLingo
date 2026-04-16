@@ -1,15 +1,24 @@
 # TeamLingo
 
+中文 | **[English](README.en.md)**
+
 Edge for Mac 的 Teams Web 实时字幕翻译扩展原型。TeamLingo 监听 Teams 页面里的实时字幕，在某句话稳定一段时间后调用 OpenAI-compatible API，并把译文显示在页面右侧悬浮窗口中。
+
+**作者：** Amoiensis (Xiping Yu) · **许可证：** MIT
+
+---
 
 ## 安装
 
 1. 在 Edge 地址栏打开 `edge://extensions/`。
 2. 打开左侧或页面上的开发人员模式。
-3. 点击加载解压缩的扩展，选择本目录：
-   `/data_hdd_lvm/data_store/Teams_subtitle/teams-caption-translator`
+3. 点击加载解压缩的扩展，选择本项目解压后的根目录。
 4. 打开扩展的 API 配置页，填写 API 格式、Endpoint、API Key、Model，并选择源语言模式和目标语言。
 5. 用 Edge 打开 Teams Web 会议并开启实时字幕，悬浮翻译窗口会自动出现在页面右侧。
+
+> **Edge Add-ons 商店：** 即将上线 — 届时可以直接从 Microsoft Edge Add-ons 商店安装。
+
+---
 
 ## API 配置
 
@@ -85,6 +94,8 @@ Microsoft Region: 按 Azure 资源填写；全局单服务 Translator 可留空
 
 插件会发送 `Ocp-Apim-Subscription-Key`。如果填写了 Microsoft Region，也会发送 `Ocp-Apim-Subscription-Region`。
 
+---
+
 ## 工作方式
 
 - 主选择器来自当前目录中的 Teams 保存页样本：`data-tid="closed-caption-text"` 和 `data-tid="author"`。
@@ -94,8 +105,29 @@ Microsoft Region: 按 Azure 资源填写；全局单服务 Translator 可留空
 - 相同发言人和相同字幕会在 30 分钟内去重，避免 Teams 虚拟列表重绘造成重复翻译。
 - API key 存在 `chrome.storage.local`，不会写入会议文件。
 
+## 功能特点
+
+- **实时字幕翻译** — 监听 Teams 实时字幕，在一句话讲完后自动调用翻译 API。
+- **多种翻译引擎** — 支持 OpenAI 兼容 API（包括 Poe）、Google Cloud Translation 和 Microsoft Translator。
+- **可配置语言对** — 可自动识别源语言，或固定为 Teams 支持的转写语言；目标语言支持多种常用语言。
+- **智能去重** — Teams 虚拟列表重绘时自动去重，避免重复翻译。
+- **简洁悬浮窗口** — 译文显示在侧边悬浮面板，不影响会议界面。
+- **双语界面** — 扩展界面支持中文和英文。
+- **隐私优先** — API 配置仅保存在本地，字幕文本仅发送至你配置的翻译 API，不经过任何第三方。
+
+---
+
 ## 注意
 
 - 浏览器扩展只能运行在 Teams Web 页面中，不能注入 Mac 原生 Teams App。
 - 因为 Endpoint 可配置，扩展声明了较宽的 `http/https` host permission，用于后台脚本向你的翻译 API 发请求。
 - 如果要在本地 `.mhtml` 保存页上测试，需要在 Edge 扩展详情页里手动允许访问文件 URL；实际 Teams Web 会议不需要这一步。
+
+## 隐私
+
+TeamLingo 不收集、存储或传输任何个人数据。详见 [PRIVACY_POLICY.md](PRIVACY_POLICY.md)。
+
+## 链接
+
+- **GitHub：** https://github.com/Amoiensis/TeamLingo
+- **Issues：** https://github.com/Amoiensis/TeamLingo/issues
