@@ -12,12 +12,26 @@ Real-time translation of Microsoft Teams live captions for Microsoft Edge browse
 ## Install from Source
 
 1. Open `edge://extensions/` in Microsoft Edge.
-2. Enable **Developer mode** (toggle on the left sidebar or page).
+2. Enable **Developer mode** using the toggle on the sidebar or page.
 3. Click **Load unpacked** and select this project directory.
-4. Open the extension's **Options** page and fill in your translation API settings (format, endpoint, API key, model, source/target language).
-5. Open a Teams Web meeting and enable **Live Captions**. The floating translation window will appear on the right side of the page automatically.
+
+![Edge extensions page and Load unpacked button](docs/images/edge-extensions-page.png)
+
+4. After installation, click the TeamsLingo toolbar icon and open the **API Configuration** page.
+5. Fill in your translation settings, including API format, endpoint, API key, model, source language mode, and target language.
+
+![TeamsLingo settings page](docs/images/settings-page.png)
 
 > **Edge Add-ons store:** Coming soon — you'll be able to install directly from the Microsoft Edge Add-ons store.
+
+## Usage
+
+1. Open a Teams Web meeting in Edge.
+2. Turn on **Live Captions** in Teams.
+3. TeamsLingo will automatically show a floating translation panel on the right side of the page. Once a caption sentence settles, the translation appears both inline and in the side panel.
+4. You can export either the source captions or a bilingual transcript from the panel when needed.
+
+![Teams meeting page with floating translation panel](docs/images/teams-meeting-page.png)
 
 ---
 
