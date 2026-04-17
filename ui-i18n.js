@@ -8,7 +8,7 @@
       options: {
         pageTitle: "TeamsLingo 配置",
         headerTitle: "TeamsLingo 配置",
-        headerDescription: "为 TeamsLingo 配置 OpenAI-compatible API 后，即可在 Teams Web 会议中自动翻译实时字幕。",
+        headerDescription: "为 TeamsLingo 配置 OpenAI-compatible 或本地 LLM API 后，即可在 Teams Web 会议中自动翻译实时字幕。",
         enabled: "启用自动翻译",
         uiLanguage: "界面语言 / Interface language",
         uiLanguageZh: "中文 / Chinese",
@@ -103,7 +103,7 @@
       options: {
         pageTitle: "TeamsLingo Settings",
         headerTitle: "TeamsLingo Settings",
-        headerDescription: "Configure an OpenAI-compatible API for TeamsLingo to translate live captions automatically in Teams web meetings.",
+        headerDescription: "Configure an OpenAI-compatible or local LLM API for TeamsLingo to translate live captions automatically in Teams web meetings.",
         enabled: "Enable automatic translation",
         uiLanguage: "Interface language / 界面语言",
         uiLanguageZh: "中文 / Chinese",

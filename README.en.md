@@ -4,7 +4,7 @@
 
 <img src="TeamsLingo_3D.png" width="160" align="right" />
 
-Real-time translation of Microsoft Teams live captions for Microsoft Edge browser (Windows, macOS, Linux). TeamsLingo monitors the caption feed in Teams Web meetings, sends each sentence to a translation API, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
+Real-time translation of Microsoft Teams live captions for Microsoft Edge browser (Windows, macOS, Linux). TeamsLingo monitors the caption feed in Teams Web meetings, sends each sentence to a translation API, supports OpenAI, OpenAI-compatible endpoints, local LLM APIs, Google Translate, and Microsoft Translator, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
 
 
 ---
@@ -39,7 +39,7 @@ Real-time translation of Microsoft Teams live captions for Microsoft Edge browse
 
 TeamsLingo supports three types of translation services.
 
-### OpenAI-compatible / Poe
+### OpenAI-compatible / Poe / local LLM API
 
 Two OpenAI-compatible request formats are supported.
 
@@ -70,6 +70,15 @@ Translation Service: OpenAI-compatible / Poe
 API Format: Responses API
 API Endpoint / Base URL: https://api.poe.com/v1
 Model: gpt-4o-mini
+```
+
+**Local LLM API example configuration:**
+
+```text
+Translation Service: OpenAI-compatible / Poe
+API Format: Chat Completions API
+API Endpoint / Base URL: http://localhost:11434/v1
+Model: gemma3:4b
 ```
 
 ### Google Translate
@@ -125,7 +134,7 @@ The extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specif
 ## Features
 
 - **Real-time caption translation** — Monitors Teams live captions and translates each completed sentence automatically.
-- **Multiple translation engines** — Supports OpenAI-compatible APIs (including Poe), Google Cloud Translation, and Microsoft Translator.
+- **Multiple translation engines** — Supports OpenAI, OpenAI-compatible APIs (including Poe and local LLM APIs), Google Cloud Translation, and Microsoft Translator.
 - **Configurable language pair** — Auto-detect or fix the source language; choose from a wide range of target languages.
 - **Smart deduplication** — Avoids redundant translations when Teams redraws its caption list.
 - **Side-by-side display** — Translations appear alongside original captions and in a floating side panel for easy comparison.

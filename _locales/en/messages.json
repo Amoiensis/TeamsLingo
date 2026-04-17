@@ -8,7 +8,7 @@
     "description": "Short extension name used where UI space is limited."
   },
   "extensionDescription": {
-    "message": "Real-time translation of Microsoft Teams live captions in a floating side window. Supports OpenAI, Google Translate, and Microsoft Translator APIs.",
+    "message": "Real-time translation of Microsoft Teams live captions. Supports OpenAI, local LLM, Google Translate, and Microsoft APIs.",
     "description": "Extension description shown in the manifest and Edge Add-ons listing."
   },
   "extensionActionTitle": {
