@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "TeamsLingo",
+  "name": "__MSG_extensionName__",
   "version": "1.0.0",
-  "description": "TeamsLingo translates Microsoft Teams live captions in a floating side window in real time. Supports OpenAI, Google Translate, and Microsoft Translator APIs.",
-  "short_name": "TeamsLingo",
+  "description": "__MSG_extensionDescription__",
+  "short_name": "__MSG_extensionShortName__",
+  "default_locale": "en",
   "author": "Amoiensis (Xiping Yu)",
   "homepage_url": "https://github.com/Amoiensis/TeamsLingo",
   "icons": {
@@ -44,7 +45,7 @@
     }
   ],
   "action": {
-    "default_title": "TeamsLingo",
+    "default_title": "__MSG_extensionActionTitle__",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
