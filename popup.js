@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
   sourceLanguageMode: "auto",
   sourceLanguage: "",
   targetLanguage: "Chinese Simplified",
+  translationMode: "balanced",
   uiLanguage: "zh-CN",
   panelTheme: "system"
 };
@@ -39,7 +40,7 @@ async function renderStatus(currentSettings) {
 
   if (!settings.enabled) {
     status.textContent = t(settings.uiLanguage, "popup.statusPaused");
-  } else if (!settings.endpoint || !settings.model) {
+  } else if (!hasTranslationConfiguration(settings)) {
     status.textContent = t(settings.uiLanguage, "popup.statusNeedApi");
   } else {
     status.textContent = `${getSourceLabel(settings)} → ${settings.targetLanguage}`;
@@ -57,6 +58,16 @@ function getSourceLabel(settings) {
     return settings.sourceLanguage;
   }
   return t(settings.uiLanguage, "common.autoDetect");
+}
+
+function hasTranslationConfiguration(settings) {
+  if (settings.provider === "openai") {
+    return Boolean(settings.endpoint && settings.model);
+  }
+  if (settings.provider === "google" || settings.provider === "microsoft") {
+    return Boolean(settings.apiKey);
+  }
+  return false;
 }
 
 function t(language, key, values) {

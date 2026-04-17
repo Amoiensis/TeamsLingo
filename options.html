@@ -109,9 +109,26 @@
 
         <div class="grid">
           <label class="field">
-            <span data-i18n="options.settleDelay">字幕稳定后翻译</span>
+            <span data-i18n="options.translationMode">翻译模式</span>
+            <select id="translationMode">
+              <option value="fast" data-i18n="options.translationModeFast">极速</option>
+              <option value="balanced" data-i18n="options.translationModeBalanced">均衡</option>
+              <option value="complete" data-i18n="options.translationModeComplete">整句优先</option>
+            </select>
+            <small data-i18n="options.translationModeHelp">根据源语言自动调整静默等待、增量合并和最大持有时间。</small>
+          </label>
+
+          <label class="field">
+            <span data-i18n="options.maxItems">窗口保留条数</span>
+            <input id="maxItems" type="number" min="5" max="100" step="1">
+          </label>
+        </div>
+
+        <div class="grid">
+          <label class="field">
+            <span data-i18n="options.settleDelay">最小静默等待</span>
             <input id="settleDelayMs" type="number" min="500" max="6000" step="100">
-            <small data-i18n="options.settleDelayHelp">单位毫秒；值越大越不容易翻译半句话。</small>
+            <small data-i18n="options.settleDelayHelp">单位毫秒；会作为自动调参后的下限，用来避免过早翻译半句话。</small>
           </label>
 
           <label class="field">
@@ -120,17 +137,10 @@
           </label>
         </div>
 
-        <div class="grid">
-          <label class="field">
-            <span data-i18n="options.maxItems">窗口保留条数</span>
-            <input id="maxItems" type="number" min="5" max="100" step="1">
-          </label>
-
-          <label class="field field-inline align-bottom">
-            <input id="processExistingOnStart" type="checkbox">
-            <span data-i18n="options.processExistingOnStart">启动时翻译已有字幕</span>
-          </label>
-        </div>
+        <label class="field field-inline">
+          <input id="processExistingOnStart" type="checkbox">
+          <span data-i18n="options.processExistingOnStart">启动时翻译已有字幕</span>
+        </label>
 
         <div class="actions">
           <button type="submit" data-i18n="options.save">保存</button>

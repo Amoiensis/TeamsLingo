@@ -16,12 +16,37 @@
     sourceLanguageMode: "auto",
     sourceLanguage: "",
     targetLanguage: "Chinese Simplified",
+    translationMode: "balanced",
     uiLanguage: "zh-CN",
     panelTheme: "system",
     settleDelayMs: 1400,
     minChars: 2,
     maxItems: 30,
     processExistingOnStart: false
+  };
+  const TRANSLATION_MODE_PRESETS = {
+    fast: {
+      compact: { baseSettleDelayMs: 1200, noPunctuationExtraDelayMs: 500, shortTextExtraDelayMs: 300, shortTextThreshold: 10, mergeWindowMs: 900, maxHoldMs: 2200 },
+      mixed: { baseSettleDelayMs: 1100, noPunctuationExtraDelayMs: 450, shortTextExtraDelayMs: 250, shortTextThreshold: 6, mergeWindowMs: 900, maxHoldMs: 2200 },
+      spaced: { baseSettleDelayMs: 900, noPunctuationExtraDelayMs: 300, shortTextExtraDelayMs: 150, shortTextThreshold: 4, mergeWindowMs: 700, maxHoldMs: 1700 },
+      unknown: { baseSettleDelayMs: 1100, noPunctuationExtraDelayMs: 450, shortTextExtraDelayMs: 250, shortTextThreshold: 6, mergeWindowMs: 900, maxHoldMs: 2200 }
+    },
+    balanced: {
+      compact: { baseSettleDelayMs: 1800, noPunctuationExtraDelayMs: 900, shortTextExtraDelayMs: 500, shortTextThreshold: 14, mergeWindowMs: 1800, maxHoldMs: 3600 },
+      mixed: { baseSettleDelayMs: 1700, noPunctuationExtraDelayMs: 850, shortTextExtraDelayMs: 400, shortTextThreshold: 8, mergeWindowMs: 1600, maxHoldMs: 3400 },
+      spaced: { baseSettleDelayMs: 1400, noPunctuationExtraDelayMs: 700, shortTextExtraDelayMs: 250, shortTextThreshold: 6, mergeWindowMs: 1200, maxHoldMs: 2600 },
+      unknown: { baseSettleDelayMs: 1600, noPunctuationExtraDelayMs: 800, shortTextExtraDelayMs: 350, shortTextThreshold: 7, mergeWindowMs: 1400, maxHoldMs: 3200 }
+    },
+    complete: {
+      compact: { baseSettleDelayMs: 2600, noPunctuationExtraDelayMs: 1400, shortTextExtraDelayMs: 700, shortTextThreshold: 18, mergeWindowMs: 2600, maxHoldMs: 5200 },
+      mixed: { baseSettleDelayMs: 2400, noPunctuationExtraDelayMs: 1200, shortTextExtraDelayMs: 600, shortTextThreshold: 10, mergeWindowMs: 2200, maxHoldMs: 4800 },
+      spaced: { baseSettleDelayMs: 1900, noPunctuationExtraDelayMs: 1000, shortTextExtraDelayMs: 350, shortTextThreshold: 8, mergeWindowMs: 1600, maxHoldMs: 3600 },
+      unknown: { baseSettleDelayMs: 2200, noPunctuationExtraDelayMs: 1100, shortTextExtraDelayMs: 500, shortTextThreshold: 9, mergeWindowMs: 1800, maxHoldMs: 4200 }
+    }
+  };
+  const COMPLETE_MODE_BATCH_LIMITS = {
+    maxEntries: 6,
+    maxChars: 900
   };
 
   let settings = { ...DEFAULT_SETTINGS };
@@ -61,6 +86,7 @@
           settings[key] = changes[key].newValue;
         }
       }
+      settings = sanitizeSettings(settings);
 
       applyPanelLocalization();
       applyPanelTheme();
@@ -70,8 +96,54 @@
 
   function loadSettings() {
     return sendMessage({ type: "getSettings" })
-      .then((response) => response?.settings ? response.settings : { ...DEFAULT_SETTINGS })
+      .then((response) => sanitizeSettings(response?.settings ? response.settings : { ...DEFAULT_SETTINGS }))
       .catch(() => ({ ...DEFAULT_SETTINGS }));
+  }
+
+  function sanitizeSettings(input) {
+    const next = { ...DEFAULT_SETTINGS, ...input };
+    next.enabled = Boolean(next.enabled);
+    next.provider = ["openai", "google", "microsoft"].includes(next.provider) ? next.provider : "openai";
+    next.apiFormat = next.apiFormat === "responses" ? "responses" : "chat_completions";
+    next.endpoint = String(next.endpoint || "").trim();
+    next.apiKey = String(next.apiKey || "").trim();
+    next.model = String(next.model || "").trim();
+    next.microsoftRegion = String(next.microsoftRegion || "").trim();
+    next.sourceLanguageMode = next.sourceLanguageMode === "fixed" ? "fixed" : "auto";
+    next.sourceLanguage = normalizeLegacyLanguage(next.sourceLanguage || "").trim();
+    next.targetLanguage = normalizeLegacyLanguage(next.targetLanguage || DEFAULT_SETTINGS.targetLanguage).trim();
+    next.translationMode = ["fast", "balanced", "complete"].includes(next.translationMode)
+      ? next.translationMode
+      : DEFAULT_SETTINGS.translationMode;
+    next.uiLanguage = next.uiLanguage === "en" ? "en" : "zh-CN";
+    next.panelTheme = ["system", "dark", "light"].includes(next.panelTheme) ? next.panelTheme : "system";
+    next.settleDelayMs = clampNumber(next.settleDelayMs, 500, 6000, DEFAULT_SETTINGS.settleDelayMs);
+    next.minChars = clampNumber(next.minChars, 1, 80, DEFAULT_SETTINGS.minChars);
+    next.maxItems = clampNumber(next.maxItems, 5, 100, DEFAULT_SETTINGS.maxItems);
+    next.processExistingOnStart = Boolean(next.processExistingOnStart);
+    return next;
+  }
+
+  function clampNumber(value, min, max, fallback) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) {
+      return fallback;
+    }
+    return Math.min(max, Math.max(min, Math.round(number)));
+  }
+
+  function normalizeLegacyLanguage(language) {
+    const value = String(language || "").trim();
+    if (value === "Simplified Chinese") {
+      return "Chinese Simplified";
+    }
+    if (value === "Traditional Chinese") {
+      return "Chinese Traditional";
+    }
+    if (value === "Japanese") {
+      return "Japanese (Japan)";
+    }
+    return value;
   }
 
   function createPanel() {
@@ -167,7 +239,7 @@
         for (const node of nodes) {
           const text = normalizeText(node.textContent);
           if (text) {
-            rememberFingerprint(makeFingerprint(findSpeaker(node), text));
+            rememberFingerprint(makeFingerprint(normalizeSpeakerKey(findSpeaker(node)), text));
           }
         }
       }
@@ -183,14 +255,34 @@
   function trackCaptionNode(node) {
     const text = normalizeText(node.textContent);
     const speaker = findSpeaker(node);
+    const speakerKey = normalizeSpeakerKey(speaker);
+    const now = Date.now();
 
     if (!text) {
+      const existing = captionStates.get(node);
+      if (existing?.timer) {
+        window.clearTimeout(existing.timer);
+      }
+      if (existing && !existing.emittedFingerprint) {
+        commitCaptionState(node, existing, false);
+      }
       clearInlineTranslation(node);
       return;
     }
 
     let state = captionStates.get(node);
-    if (state && state.text === text && state.speaker === speaker) {
+    if (state && !state.emittedFingerprint && !canMergeSpeakers(state.speakerKey, speakerKey)) {
+      window.clearTimeout(state.timer);
+      commitCaptionState(node, state, false);
+      state = captionStates.get(node);
+    }
+
+    if (state?.emittedFingerprint) {
+      if (state.text === text && state.speakerKey === speakerKey) {
+        return;
+      }
+      state = null;
+    } else if (state && state.text === text && state.speakerKey === speakerKey) {
       return;
     }
 
@@ -201,28 +293,52 @@
     state = {
       text,
       speaker,
+      speakerKey,
       token: createToken(),
-      timer: 0
+      timer: 0,
+      firstSeenAt: state && !state.emittedFingerprint ? state.firstSeenAt : now,
+      lastChangedAt: now,
+      emittedFingerprint: ""
     };
     clearInlineTranslation(node);
-    state.timer = window.setTimeout(() => finalizeCaption(node, state.token), settings.settleDelayMs);
+    scheduleFinalize(node, state);
     captionStates.set(node, state);
+  }
+
+  function scheduleFinalize(node, state) {
+    const tuning = resolveCaptionTuning(state.text);
+    const quietWindowMs = computeQuietWindow(state.text, tuning);
+    const elapsedMs = Date.now() - state.firstSeenAt;
+    const remainingHoldMs = Math.max(0, tuning.maxHoldMs - elapsedMs);
+    const delayMs = remainingHoldMs === 0 ? 0 : Math.min(quietWindowMs, remainingHoldMs);
+
+    state.token = createToken();
+    state.timer = window.setTimeout(() => finalizeCaption(node, state.token), delayMs);
   }
 
   function finalizeCaption(node, token) {
     const state = captionStates.get(node);
-    if (!state || state.token !== token) {
+    if (!state || state.token !== token || state.emittedFingerprint) {
       return;
     }
 
     const text = normalizeText(node.textContent);
     const speaker = findSpeaker(node);
-    if (text !== state.text || speaker !== state.speaker) {
+    const speakerKey = normalizeSpeakerKey(speaker);
+    if (text !== state.text || speakerKey !== state.speakerKey) {
       trackCaptionNode(node);
       return;
     }
 
-    const fingerprint = makeFingerprint(speaker, text);
+    commitCaptionState(node, state, true);
+  }
+
+  function commitCaptionState(node, state, allowInline) {
+    const fingerprint = makeFingerprint(state.speakerKey, state.text);
+    state.timer = 0;
+    state.emittedFingerprint = fingerprint;
+    captionStates.set(node, state);
+
     if (seenFingerprints.has(fingerprint)) {
       return;
     }
@@ -230,28 +346,229 @@
     rememberFingerprint(fingerprint);
     const item = {
       id: createToken(),
-      speaker,
-      text,
+      speaker: state.speaker,
+      speakerKey: state.speakerKey,
+      text: state.text,
       createdAt: Date.now()
     };
+    const tuning = resolveCaptionTuning(state.text);
+    const entry = upsertTranscriptEntry(item, tuning);
 
-    recordTranscript(item);
-
-    if (!settings.enabled || text.length < settings.minChars) {
+    if (!settings.enabled || entry.text.length < settings.minChars) {
       clearInlineTranslation(node);
       return;
     }
 
-    enqueueTranslation({
-      ...item,
-      inlineNode: showPendingInlineTranslation(node, item.id)
-    });
+    if (allowInline) {
+      attachInlineNode(entry, showPendingInlineTranslation(node, entry.id));
+    }
+    queueTranslation(entry);
   }
 
-  function enqueueTranslation(item) {
-    const card = appendCard(item);
-    queue.push({ ...item, card });
+  function upsertTranscriptEntry(item, tuning) {
+    const existing = findMergeableEntry(item, tuning);
+    if (existing) {
+      existing.speaker = item.speaker;
+      existing.speakerKey = item.speakerKey;
+      existing.text = item.text;
+      existing.lastUpdatedAt = item.createdAt;
+      existing.error = "";
+      existing.translatedText = "";
+      existing.translatedAt = 0;
+      if (existing.card) {
+        updateCardSource(existing.card, existing);
+        list.prepend(existing.card);
+      }
+      return existing;
+    }
+
+    const entry = createTranscriptEntry(item);
+    transcriptEntries.push(entry);
+    return entry;
+  }
+
+  function queueTranslation(entry, bumpVersion = true) {
+    if (entry.discarded || !settings.enabled || entry.text.length < settings.minChars) {
+      return;
+    }
+
+    if (bumpVersion) {
+      entry.version += 1;
+    }
+
+    entry.error = "";
+    entry.translatedText = "";
+    entry.translatedAt = 0;
+    entry.card = entry.card || appendCard(entry);
+    setCardPending(entry.card);
+
+    if (entry.queued || entry.inFlight) {
+      return;
+    }
+
+    entry.queued = true;
+    queue.push(entry);
     pumpQueue();
+  }
+
+  function takeNextTranslationBatch() {
+    let first = null;
+    while (queue.length > 0) {
+      const candidate = queue.shift();
+      if (!candidate || candidate.discarded) {
+        continue;
+      }
+
+      candidate.queued = false;
+      if (!settings.enabled || candidate.text.length < settings.minChars) {
+        continue;
+      }
+
+      first = candidate;
+      break;
+    }
+
+    if (!first) {
+      return null;
+    }
+
+    const entries = [first];
+    if (settings.translationMode !== "complete" || !first.speakerKey) {
+      return buildTranslationBatch(entries);
+    }
+
+    let totalChars = first.text.length;
+    while (queue.length > 0 && entries.length < COMPLETE_MODE_BATCH_LIMITS.maxEntries) {
+      const candidate = queue[0];
+      if (!candidate || candidate.discarded) {
+        queue.shift();
+        if (candidate) {
+          candidate.queued = false;
+        }
+        continue;
+      }
+
+      if (!settings.enabled || candidate.text.length < settings.minChars) {
+        queue.shift();
+        candidate.queued = false;
+        continue;
+      }
+
+      if (!canMergeTranscriptEntries(first.speakerKey, candidate.speakerKey)) {
+        break;
+      }
+
+      if (totalChars + candidate.text.length + 1 > COMPLETE_MODE_BATCH_LIMITS.maxChars) {
+        break;
+      }
+
+      queue.shift();
+      candidate.queued = false;
+      entries.push(candidate);
+      totalChars += candidate.text.length + 1;
+    }
+
+    return buildTranslationBatch(entries);
+  }
+
+  function buildTranslationBatch(entries) {
+    return {
+      entries,
+      sourceText: entries.map((entry) => entry.text).join("\n"),
+      versions: entries.map((entry) => entry.version)
+    };
+  }
+
+  function hasBatchVersionMismatch(batch) {
+    return batch.entries.some((entry, index) => entry.version !== batch.versions[index]);
+  }
+
+  function setBatchInFlight(batch, inFlight) {
+    for (const entry of batch.entries) {
+      entry.inFlight = inFlight;
+    }
+  }
+
+  function applyTranslationBatchSuccess(batch, translatedText) {
+    if (batch.entries.length === 1) {
+      const [entry] = batch.entries;
+      entry.translatedText = translatedText;
+      entry.translatedAt = Date.now();
+      entry.error = "";
+      entry.batchLeaderId = "";
+      entry.batchMemberIds = [];
+      entry.batchSourceText = "";
+      entry.batchStartAt = 0;
+      updateCard(entry.card, translatedText, false);
+      updateInlineTranslation(entry.inlineNode, entry.id, translatedText, false);
+      return;
+    }
+
+    const leader = batch.entries[0];
+    const batchTime = Date.now();
+    leader.batchLeaderId = "";
+    leader.batchMemberIds = batch.entries.map((entry) => entry.id);
+    leader.batchSourceText = batch.entries.map((entry) => entry.text).join("\n");
+    leader.batchStartAt = leader.createdAt;
+    leader.translatedText = translatedText;
+    leader.translatedAt = batchTime;
+    leader.error = "";
+    if (leader.card) {
+      leader.card.hidden = false;
+      updateCardSource(leader.card, leader);
+      updateCard(leader.card, translatedText, false);
+      list.prepend(leader.card);
+    }
+
+    const inlineTarget = resolveBatchInlineTarget(batch.entries);
+    for (const entry of batch.entries) {
+      if (entry === leader) {
+        continue;
+      }
+
+      entry.batchLeaderId = leader.id;
+      entry.batchMemberIds = [];
+      entry.batchSourceText = "";
+      entry.batchStartAt = 0;
+      entry.translatedText = "";
+      entry.translatedAt = batchTime;
+      entry.error = "";
+      if (entry.card) {
+        entry.card.hidden = true;
+      }
+      if (entry.inlineNode && entry.inlineNode !== inlineTarget) {
+        clearInlineTranslationElement(entry.inlineNode);
+      }
+    }
+
+    if (inlineTarget) {
+      updateInlineTranslation(inlineTarget, inlineTarget.dataset.tctItemId, translatedText, false);
+    } else {
+      updateInlineTranslation(leader.inlineNode, leader.id, translatedText, false);
+    }
+    if (leader.inlineNode && leader.inlineNode !== inlineTarget) {
+      clearInlineTranslationElement(leader.inlineNode);
+    }
+  }
+
+  function applyTranslationBatchError(batch, message) {
+    for (const entry of batch.entries) {
+      entry.translatedText = "";
+      entry.translatedAt = 0;
+      entry.error = message;
+      updateCard(entry.card, message, true);
+      updateInlineTranslation(entry.inlineNode, entry.id, t("panel.inlineTranslationFailed"), true);
+    }
+  }
+
+  function resolveBatchInlineTarget(entries) {
+    for (let index = entries.length - 1; index >= 0; index -= 1) {
+      const entry = entries[index];
+      if (entry?.inlineNode?.dataset?.tctItemId) {
+        return entry.inlineNode;
+      }
+    }
+    return null;
   }
 
   async function pumpQueue() {
@@ -261,15 +578,20 @@
 
     isProcessing = true;
     while (queue.length > 0) {
-      const job = queue.shift();
+      const batch = takeNextTranslationBatch();
+      if (!batch) {
+        continue;
+      }
+
+      let shouldRequeueBatch = false;
+      setBatchInFlight(batch, true);
       updateStatus(t("panel.statusTranslating"));
 
       try {
         const response = await sendMessage({
           type: "translate",
           payload: {
-            speaker: job.speaker,
-            text: job.text
+            text: batch.sourceText
           }
         });
 
@@ -277,21 +599,44 @@
           throw new Error(response?.error || "Translation failed.");
         }
 
-        updateCard(job.card, response.result, false);
-        updateInlineTranslation(job.inlineNode, job.id, response.result, false);
-        updateTranscript(job.id, {
-          translatedText: response.result,
-          translatedAt: Date.now(),
-          error: ""
-        });
+        if (batch.entries.some((entry) => entry.discarded)) {
+          continue;
+        }
+
+        if (hasBatchVersionMismatch(batch)) {
+          shouldRequeueBatch = true;
+          continue;
+        }
+
+        applyTranslationBatchSuccess(batch, response.result);
       } catch (error) {
-        updateCard(job.card, error.message || String(error), true);
-        updateInlineTranslation(job.inlineNode, job.id, t("panel.inlineTranslationFailed"), true);
-        updateTranscript(job.id, {
-          translatedText: "",
-          translatedAt: 0,
-          error: error.message || String(error)
-        });
+        if (batch.entries.some((entry) => entry.discarded)) {
+          continue;
+        }
+
+        if (hasBatchVersionMismatch(batch)) {
+          shouldRequeueBatch = true;
+          continue;
+        }
+
+        const message = error.message || String(error);
+        applyTranslationBatchError(batch, message);
+      } finally {
+        setBatchInFlight(batch, false);
+        if (shouldRequeueBatch) {
+          for (const entry of batch.entries) {
+            if (!entry.discarded) {
+              queueTranslation(entry, false);
+            }
+          }
+          continue;
+        }
+        for (let index = 0; index < batch.entries.length; index += 1) {
+          const entry = batch.entries[index];
+          if (!entry.discarded && entry.version !== batch.versions[index]) {
+            queueTranslation(entry, false);
+          }
+        }
       }
     }
 
@@ -313,22 +658,42 @@
       <div class="tct-translation">${t("panel.pendingTranslation")}</div>
     `;
 
-    card.querySelector(".tct-speaker").textContent = item.speaker || t("panel.unknownSpeaker");
-    card.querySelector(".tct-time").textContent = formatTime(item.createdAt);
-    card.querySelector(".tct-source").textContent = item.text;
+    updateCardSource(card, item);
     list.prepend(card);
     trimCards();
     return card;
   }
 
   function updateCard(card, text, isError) {
+    card.hidden = false;
     card.classList.toggle("tct-pending", false);
     card.classList.toggle("tct-error", Boolean(isError));
     card.querySelector(".tct-translation").textContent = text;
   }
 
+  function setCardPending(card) {
+    if (!card) {
+      return;
+    }
+
+    card.hidden = false;
+    card.classList.toggle("tct-pending", true);
+    card.classList.toggle("tct-error", false);
+    card.querySelector(".tct-translation").textContent = t("panel.pendingTranslation");
+  }
+
+  function updateCardSource(card, item) {
+    if (!card) {
+      return;
+    }
+
+    card.querySelector(".tct-speaker").textContent = resolveEntrySpeakerLabel(item);
+    card.querySelector(".tct-time").textContent = formatTime(resolveEntryStartTime(item));
+    card.querySelector(".tct-source").textContent = resolveEntrySourceText(item);
+  }
+
   function trimCards() {
-    const cards = Array.from(list.querySelectorAll(".tct-card"));
+    const cards = Array.from(list.querySelectorAll(".tct-card")).filter((card) => !card.hidden);
     for (const card of cards.slice(settings.maxItems)) {
       card.remove();
     }
@@ -342,6 +707,9 @@
   }
 
   function clearSession() {
+    for (const entry of transcriptEntries) {
+      entry.discarded = true;
+    }
     queue = [];
     transcriptEntries = [];
     clearList();
@@ -361,7 +729,7 @@
 
     if (!settings.enabled) {
       status.textContent = t("panel.statusPaused");
-    } else if (!settings.endpoint || !settings.model) {
+    } else if (!hasTranslationConfiguration()) {
       status.textContent = t("panel.statusNeedApi");
     } else {
       status.textContent = `${getSourceLabel()} → ${settings.targetLanguage}`;
@@ -399,8 +767,176 @@
       .trim();
   }
 
-  function makeFingerprint(speaker, text) {
-    return `${speaker || "unknown"}::${text}`.toLowerCase();
+  function normalizeSpeakerKey(speaker) {
+    const normalized = normalizeText(speaker).toLowerCase();
+    if (!normalized) {
+      return "";
+    }
+
+    const latinTokens = normalized
+      .split(/[\s,]+/)
+      .map((token) => token.replace(/[^a-z'-]+/g, ""))
+      .filter(Boolean);
+
+    if (latinTokens.length > 1 && latinTokens.join("").length >= normalized.replace(/[^a-z]+/g, "").length * 0.7) {
+      return latinTokens.slice().sort().join(" ");
+    }
+
+    return normalized;
+  }
+
+  function canonicalizeComparisonText(text) {
+    return normalizeText(text)
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, "");
+  }
+
+  function makeFingerprint(speakerKey, text) {
+    return `${speakerKey || "unknown"}::${canonicalizeComparisonText(text)}`;
+  }
+
+  function canMergeSpeakers(left, right) {
+    return left === right;
+  }
+
+  function canMergeTranscriptEntries(left, right) {
+    return Boolean(left && right && left === right);
+  }
+
+  function findMergeableEntry(item, tuning) {
+    for (let index = transcriptEntries.length - 1; index >= 0; index -= 1) {
+      const entry = transcriptEntries[index];
+      if (!entry || entry.discarded) {
+        continue;
+      }
+
+      if (item.createdAt - entry.lastUpdatedAt > tuning.mergeWindowMs) {
+        continue;
+      }
+
+      if (!canMergeTranscriptEntries(entry.speakerKey, item.speakerKey)) {
+        continue;
+      }
+
+      if (shouldMergeTranscriptTexts(entry.text, item.text)) {
+        return entry;
+      }
+    }
+
+    return null;
+  }
+
+  function shouldMergeTranscriptTexts(previousText, nextText) {
+    const previous = canonicalizeComparisonText(previousText);
+    const next = canonicalizeComparisonText(nextText);
+    if (!previous || !next) {
+      return false;
+    }
+
+    if (previous === next) {
+      return true;
+    }
+
+    const shorter = previous.length <= next.length ? previous : next;
+    const longer = shorter === previous ? next : previous;
+    if (shorter.length < 6) {
+      return false;
+    }
+
+    if (longer.includes(shorter) && shorter.length / longer.length >= 0.5) {
+      return true;
+    }
+
+    return commonPrefixLength(previous, next) / shorter.length >= 0.82;
+  }
+
+  function commonPrefixLength(left, right) {
+    const limit = Math.min(left.length, right.length);
+    let index = 0;
+    while (index < limit && left[index] === right[index]) {
+      index += 1;
+    }
+    return index;
+  }
+
+  function resolveCaptionTuning(text) {
+    const mode = ["fast", "balanced", "complete"].includes(settings.translationMode)
+      ? settings.translationMode
+      : DEFAULT_SETTINGS.translationMode;
+    const profile = resolveLanguageProfile(text);
+    return {
+      profile,
+      ...TRANSLATION_MODE_PRESETS[mode][profile]
+    };
+  }
+
+  function resolveLanguageProfile(text) {
+    if (settings.sourceLanguageMode === "fixed" && settings.sourceLanguage) {
+      return classifyFixedLanguageProfile(settings.sourceLanguage);
+    }
+    return inferLanguageProfileFromText(text);
+  }
+
+  function classifyFixedLanguageProfile(language) {
+    const normalized = String(language || "").toLowerCase();
+    if (/(japanese|japan|chinese|korean|korea|thai)/.test(normalized)) {
+      return "compact";
+    }
+    return "spaced";
+  }
+
+  function inferLanguageProfileFromText(text) {
+    const normalized = normalizeText(text);
+    if (!normalized) {
+      return "unknown";
+    }
+
+    const compactChars = (normalized.match(/[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af\u0e00-\u0e7f]/g) || []).length;
+    const latinChars = (normalized.match(/[A-Za-z]/g) || []).length;
+    const lettersOrDigits = (normalized.match(/[\p{L}\p{N}]/gu) || []).length || normalized.length;
+
+    if (compactChars > 0 && latinChars > 0) {
+      return "mixed";
+    }
+    if (compactChars / lettersOrDigits >= 0.35) {
+      return "compact";
+    }
+    if (latinChars / lettersOrDigits >= 0.4 || /\s/.test(normalized)) {
+      return "spaced";
+    }
+    return "unknown";
+  }
+
+  function computeQuietWindow(text, tuning) {
+    let delayMs = Math.max(settings.settleDelayMs, tuning.baseSettleDelayMs);
+    if (!hasSentenceEnding(text)) {
+      delayMs += tuning.noPunctuationExtraDelayMs;
+    }
+    if (countTextUnits(text, tuning.profile) < tuning.shortTextThreshold) {
+      delayMs += tuning.shortTextExtraDelayMs;
+    }
+    return delayMs;
+  }
+
+  function countTextUnits(text, profile) {
+    if (profile === "spaced" || profile === "mixed") {
+      return normalizeText(text).split(/\s+/).filter(Boolean).length;
+    }
+    return canonicalizeComparisonText(text).length;
+  }
+
+  function hasSentenceEnding(text) {
+    return /[.!?。！？…]$/.test(normalizeText(text));
+  }
+
+  function hasTranslationConfiguration() {
+    if (settings.provider === "openai") {
+      return Boolean(settings.endpoint && settings.model);
+    }
+    if (settings.provider === "google" || settings.provider === "microsoft") {
+      return Boolean(settings.apiKey);
+    }
+    return false;
   }
 
   function rememberFingerprint(fingerprint) {
@@ -447,25 +983,28 @@
     return `teams-captions-${year}${month}${day}-${hour}${minute}${second}-${suffix}.txt`;
   }
 
-  function recordTranscript(item) {
-    transcriptEntries.push({
+  function createTranscriptEntry(item) {
+    return {
       id: item.id,
       speaker: item.speaker || "",
+      speakerKey: item.speakerKey || "",
       text: item.text,
       createdAt: item.createdAt,
+      lastUpdatedAt: item.createdAt,
       translatedText: "",
       translatedAt: 0,
-      error: ""
-    });
-  }
-
-  function updateTranscript(id, patch) {
-    const entry = transcriptEntries.find((candidate) => candidate.id === id);
-    if (!entry) {
-      return;
-    }
-
-    Object.assign(entry, patch);
+      error: "",
+      card: null,
+      inlineNode: null,
+      version: 0,
+      queued: false,
+      inFlight: false,
+      discarded: false,
+      batchLeaderId: "",
+      batchMemberIds: [],
+      batchSourceText: "",
+      batchStartAt: 0
+    };
   }
 
   async function exportTranscript(includeTranslations) {
@@ -505,6 +1044,23 @@
     ];
 
     for (const entry of transcriptEntries) {
+      if (entry.batchLeaderId) {
+        continue;
+      }
+
+      const members = resolveTranscriptBatchMembers(entry);
+      if (members.length > 1) {
+        for (const member of members) {
+          lines.push(`[${formatDateForExport(member.createdAt)}] ${member.speaker || t("panel.unknownSpeaker")}`);
+          lines.push(`${t("panel.exportSourcePrefix")}: ${member.text}`);
+        }
+        if (includeTranslations) {
+          lines.push(`${t("panel.exportTranslationPrefix")}: ${resolveTranscriptTranslation(entry)}`);
+        }
+        lines.push("");
+        continue;
+      }
+
       lines.push(`[${formatDateForExport(entry.createdAt)}] ${entry.speaker || t("panel.unknownSpeaker")}`);
       lines.push(`${t("panel.exportSourcePrefix")}: ${entry.text}`);
       if (includeTranslations) {
@@ -524,6 +1080,33 @@
       return t("panel.exportTranslationFailed", { message: entry.error });
     }
     return t("panel.exportUntranslated");
+  }
+
+  function resolveTranscriptBatchMembers(entry) {
+    if (!Array.isArray(entry.batchMemberIds) || entry.batchMemberIds.length < 2) {
+      return [entry];
+    }
+
+    const members = entry.batchMemberIds
+      .map((id) => transcriptEntries.find((candidate) => candidate?.id === id))
+      .filter(Boolean);
+    return members.length > 0 ? members : [entry];
+  }
+
+  function resolveEntrySourceText(entry) {
+    return entry.batchSourceText || entry.text;
+  }
+
+  function resolveEntryStartTime(entry) {
+    return entry.batchStartAt || entry.createdAt;
+  }
+
+  function resolveEntrySpeakerLabel(entry) {
+    const speaker = entry.speaker || t("panel.unknownSpeaker");
+    if (Array.isArray(entry.batchMemberIds) && entry.batchMemberIds.length > 1) {
+      return `${speaker} · ${t("panel.batchCount", { count: entry.batchMemberIds.length })}`;
+    }
+    return speaker;
   }
 
   function showPendingInlineTranslation(node, itemId) {
@@ -553,6 +1136,10 @@
       return;
     }
 
+    clearInlineTranslationElement(inlineNode);
+  }
+
+  function clearInlineTranslationElement(inlineNode) {
     inlineNode.hidden = true;
     inlineNode.dataset.tctItemId = "";
     inlineNode.classList.remove("tct-inline-pending", "tct-inline-error");
@@ -578,6 +1165,13 @@
     inlineNode.hidden = true;
     node.insertAdjacentElement("afterend", inlineNode);
     return inlineNode;
+  }
+
+  function attachInlineNode(entry, inlineNode) {
+    if (entry.inlineNode && entry.inlineNode !== inlineNode) {
+      clearInlineTranslationElement(entry.inlineNode);
+    }
+    entry.inlineNode = inlineNode;
   }
 
   function sendMessage(message) {

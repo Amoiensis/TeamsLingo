@@ -325,6 +325,7 @@
 .tct-source {
   color: var(--tct-source-color);
   font-size: 12px;
+  white-space: pre-wrap;
   word-break: break-word;
 }
 
@@ -333,6 +334,7 @@
   color: var(--tct-translation-color);
   font-size: 14px;
   font-weight: 540;
+  white-space: pre-wrap;
   word-break: break-word;
 }
 

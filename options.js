@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
   sourceLanguageMode: "auto",
   sourceLanguage: "",
   targetLanguage: "Chinese Simplified",
+  translationMode: "balanced",
   uiLanguage: "zh-CN",
   panelTheme: "system",
   settleDelayMs: 1400,
@@ -36,6 +37,7 @@ const fields = {
   sourceLanguageCustom: document.getElementById("sourceLanguageCustom"),
   targetLanguageSelect: document.getElementById("targetLanguageSelect"),
   targetLanguageCustom: document.getElementById("targetLanguageCustom"),
+  translationMode: document.getElementById("translationMode"),
   settleDelayMs: document.getElementById("settleDelayMs"),
   minChars: document.getElementById("minChars"),
   maxItems: document.getElementById("maxItems"),
@@ -72,6 +74,9 @@ async function restore() {
   fields.sourceLanguageMode.value = settings.sourceLanguageMode === "fixed" ? "fixed" : "auto";
   setLanguageSelection(fields.sourceLanguageSelect, fields.sourceLanguageCustom, normalizeLegacyLanguage(settings.sourceLanguage || "Japanese (Japan)"));
   setLanguageSelection(fields.targetLanguageSelect, fields.targetLanguageCustom, normalizeLegacyLanguage(settings.targetLanguage || DEFAULT_SETTINGS.targetLanguage));
+  fields.translationMode.value = ["fast", "balanced", "complete"].includes(settings.translationMode)
+    ? settings.translationMode
+    : DEFAULT_SETTINGS.translationMode;
   fields.settleDelayMs.value = settings.settleDelayMs;
   fields.minChars.value = settings.minChars;
   fields.maxItems.value = settings.maxItems;
@@ -84,19 +89,26 @@ async function restore() {
 
 async function save(event) {
   event.preventDefault();
-  await chrome.storage.local.set(readForm());
+  const nextSettings = readForm();
+  const probe = await probeAndPersistModelProfile(nextSettings);
+  const probeSummary = summarizeModelProfile(probe);
+  if (probeSummary) {
+    showMessageText(`${t("options.saved")} ${probeSummary}`);
+    return;
+  }
   showMessageKey("options.saved");
 }
 
 async function testTranslation() {
-  await chrome.storage.local.set(readForm());
+  const nextSettings = readForm();
+  const probe = await probeAndPersistModelProfile(nextSettings);
   showMessageKey("options.testing");
 
   try {
+    const probeSummary = summarizeModelProfile(probe);
     const response = await sendMessage({
       type: "translate",
       payload: {
-        speaker: "Test",
         text: "この設定でリアルタイム字幕を翻訳します。"
       }
     });
@@ -105,7 +117,11 @@ async function testTranslation() {
       throw new Error(response?.error || t("options.testFailure"));
     }
 
-    showMessageKey("options.testSuccess", { result: response.result });
+    let summary = t("options.testSuccess", { result: response.result });
+    if (probeSummary) {
+      summary += ` ${probeSummary}`;
+    }
+    showMessageText(summary);
   } catch (error) {
     showMessageText(error.message || t("options.testFailure"), true);
   }
@@ -128,6 +144,9 @@ function readForm() {
       ? readLanguageSelection(fields.sourceLanguageSelect, fields.sourceLanguageCustom)
       : "",
     targetLanguage: readLanguageSelection(fields.targetLanguageSelect, fields.targetLanguageCustom),
+    translationMode: ["fast", "balanced", "complete"].includes(fields.translationMode.value)
+      ? fields.translationMode.value
+      : DEFAULT_SETTINGS.translationMode,
     settleDelayMs: Number(fields.settleDelayMs.value),
     minChars: Number(fields.minChars.value),
     maxItems: Number(fields.maxItems.value),
@@ -222,6 +241,110 @@ function syncApiPlaceholder() {
     fields.endpoint.placeholder = "https://api.openai.com/v1/chat/completions";
     fields.endpointHelp.textContent = t("options.endpointHelpChat");
   }
+}
+
+async function probeAndPersistModelProfile(settings) {
+  let nextSettings = { ...settings };
+
+  if (settings.provider !== "openai" || !settings.endpoint || !settings.model) {
+    await chrome.storage.local.set(nextSettings);
+    return null;
+  }
+
+  try {
+    const response = await sendMessage({
+      type: "probeModel",
+      settings
+    });
+
+    if (!response?.ok) {
+      throw new Error(response?.error || "Model probe failed.");
+    }
+
+    nextSettings = {
+      ...nextSettings,
+      ...(response.profile?.cacheSettings || {})
+    };
+    await chrome.storage.local.set(nextSettings);
+    return response.profile || null;
+  } catch (error) {
+    nextSettings = {
+      ...nextSettings,
+      thinkingControlMode: "none",
+      thinkingControlSignature: "",
+      thinkingControlDetection: "unknown"
+    };
+    await chrome.storage.local.set(nextSettings);
+    return {
+      recommendedControl: "none",
+      detection: "unknown",
+      probeError: error.message || String(error)
+    };
+  }
+}
+
+function summarizeModelProfile(profile) {
+  if (!profile) {
+    return "";
+  }
+
+  if (profile.modelListed && profile.modelExists === false) {
+    return t("options.modelProbeMissing");
+  }
+
+  if (profile.probeError) {
+    return t("options.modelProbeFailed", {
+      message: profile.probeError
+    });
+  }
+
+  if (profile.resolvedControl === "think_false") {
+    return profile.controlVerified
+      ? t("options.modelProbeThinkFalseVerified")
+      : t("options.modelProbeThinkFalse");
+  }
+
+  if (profile.resolvedControl === "reasoning_effort_none") {
+    return t("options.modelProbeReasoningEffortVerified");
+  }
+
+  if (profile.resolvedControl === "reasoning_effort_minimal") {
+    return t("options.modelProbeReasoningEffortMinimalVerified");
+  }
+
+  if (profile.resolvedControl === "reasoning_effort_low") {
+    return t("options.modelProbeReasoningEffortLowVerified");
+  }
+
+  if (profile.resolvedControl === "reasoning_object_none") {
+    return t("options.modelProbeReasoningObjectVerified");
+  }
+
+  if (profile.resolvedControl === "reasoning_object_minimal") {
+    return t("options.modelProbeReasoningObjectMinimalVerified");
+  }
+
+  if (profile.resolvedControl === "reasoning_object_low") {
+    return t("options.modelProbeReasoningObjectLowVerified");
+  }
+
+  if (profile.recommendedControl === "think_level") {
+    return t("options.modelProbeThinkLevel");
+  }
+
+  if (profile.recommendedControl === "reasoning_effort") {
+    return t("options.modelProbeReasoningEffort");
+  }
+
+  if (profile.recommendedControl === "think_false") {
+    return t("options.modelProbeThinkFalse");
+  }
+
+  if (profile.detection === "unknown") {
+    return t("options.modelProbeUnknown");
+  }
+
+  return t("options.modelProbePlain");
 }
 
 function normalizeLegacyLanguage(language) {
