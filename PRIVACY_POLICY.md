@@ -40,7 +40,7 @@ The Extension requests the following browser permissions:
 |---|---|
 | `storage` | Store your API configuration and preferences locally |
 | `downloads` | Allow exporting translated captions as files |
-| `host_permissions` (teams.microsoft.com, teams.live.com) | Inject translation UI into Teams meeting pages |
+| `host_permissions` (teams.microsoft.com, teams.cloud.microsoft, teams.live.com) | Inject translation UI into Teams meeting pages |
 | `host_permissions` (https://\*/, http://\*/) | Send caption text to your configured translation API endpoint |
 
 ## Third-Party Services

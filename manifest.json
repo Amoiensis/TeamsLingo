@@ -20,6 +20,8 @@
   "host_permissions": [
     "https://teams.microsoft.com/*",
     "https://*.teams.microsoft.com/*",
+    "https://teams.cloud.microsoft/*",
+    "https://*.teams.cloud.microsoft/*",
     "https://teams.live.com/*",
     "https://*/*",
     "http://*/*"
@@ -32,6 +34,8 @@
       "matches": [
         "https://teams.microsoft.com/*",
         "https://*.teams.microsoft.com/*",
+        "https://teams.cloud.microsoft/*",
+        "https://*.teams.cloud.microsoft/*",
         "https://teams.live.com/*"
       ],
       "js": [

@@ -145,7 +145,7 @@ The extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specif
 
 ## Notes
 
-- This extension only works on Teams **Web** pages (teams.microsoft.com / teams.live.com) — it does not support the Teams desktop client.
+- This extension only works on Teams **Web** pages (teams.microsoft.com / teams.cloud.microsoft / teams.live.com) — it does not support the Teams desktop client.
 - Because the translation API endpoint is fully user-configurable, the extension declares broad `http/https` host permissions so the background service worker can make requests to your chosen API.
 
 ---

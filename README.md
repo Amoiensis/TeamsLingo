@@ -143,7 +143,7 @@ Microsoft Region: 按 Azure 资源填写；全局单服务 Translator 可留空
 
 ## 注意
 
-- 浏览器扩展只能运行在 Teams **Web** 页面（teams.microsoft.com / teams.live.com），不支持 Teams 桌面客户端。
+- 浏览器扩展只能运行在 Teams **Web** 页面（teams.microsoft.com / teams.cloud.microsoft / teams.live.com），不支持 Teams 桌面客户端。
 - 因为 Endpoint 可配置，扩展声明了较宽的 `http/https` host permission，用于后台脚本向你的翻译 API 发请求。
 
 ## 隐私

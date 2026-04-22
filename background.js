@@ -434,8 +434,26 @@ async function fetchModelRegistry(settings) {
   const models = Array.isArray(data?.data) ? data.data : [];
   return {
     listed: true,
-    exists: models.some((item) => String(item?.id || "").trim() === settings.model)
+    exists: models.some((item) => modelIdsMatch(item?.id, settings.model))
   };
+}
+
+function modelIdsMatch(listedModel, configuredModel) {
+  const listed = String(listedModel || "").trim();
+  const configured = String(configuredModel || "").trim();
+  if (!listed || !configured) {
+    return false;
+  }
+
+  return listed === configured
+    || normalizeModelIdForRegistry(listed) === normalizeModelIdForRegistry(configured);
+}
+
+function normalizeModelIdForRegistry(model) {
+  return String(model || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
 }
 
 function resolveModelsEndpoint(endpoint) {
