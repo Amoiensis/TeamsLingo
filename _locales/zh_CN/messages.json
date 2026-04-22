@@ -1,15 +1,15 @@
 {
   "extensionName": {
     "message": "TeamsLingo",
-    "description": "显示在浏览器界面和 Edge 插件商店中的扩展名称。"
+    "description": "显示在浏览器界面和扩展商店中的扩展名称。"
   },
   "extensionShortName": {
     "message": "TeamsLingo",
     "description": "在空间有限处显示的扩展短名称。"
   },
   "extensionDescription": {
-    "message": "Microsoft Teams 实时字幕翻译扩展。支持 OpenAI、本地 LLM API、Google 翻译和微软翻译 API。",
-    "description": "显示在 manifest 和 Edge 插件商店中的扩展描述。"
+    "message": "Microsoft Teams Web 实时字幕翻译浏览器扩展。支持 OpenAI、本地 LLM API、Google 翻译和微软翻译 API。",
+    "description": "显示在 manifest 和扩展商店中的扩展描述。"
   },
   "extensionActionTitle": {
     "message": "TeamsLingo",

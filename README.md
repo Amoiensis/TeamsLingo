@@ -4,29 +4,33 @@
 
 中文 | **[English](README.en.md)**
 
-Microsoft Edge 浏览器的 Teams Web 实时字幕翻译扩展。TeamsLingo 监听 Teams 页面中的实时字幕，调用翻译 API 进行翻译，支持 OpenAI、OpenAI 兼容接口、本地 LLM API、Google 翻译和微软翻译，译文同步显示在原文字幕旁及页面右侧悬浮窗口中，并支持会议字幕与译文的导出。
+适用于 Microsoft Edge 和 Google Chrome 的 Teams Web 实时字幕翻译浏览器扩展。TeamsLingo 监听 Teams 页面中的实时字幕，调用翻译 API 进行翻译，支持 OpenAI、OpenAI 兼容接口、本地 LLM API、Google 翻译和微软翻译，译文同步显示在原文字幕旁及页面右侧悬浮窗口中，并支持会议字幕与译文的导出。
 
 
 ---
 
 ## 安装
 
-1. 在 Edge 地址栏打开 `edge://extensions/`。
-2. 打开左侧或页面上的开发人员模式。
-3. 点击“加载解压缩的扩展”，选择本项目解压后的根目录。
+1. 在浏览器地址栏打开扩展管理页：
+   - Edge：`edge://extensions/`
+   - Chrome：`chrome://extensions/`
+2. 打开页面上的“开发人员模式 / Developer mode”。
+3. 点击“加载解压缩的扩展 / Load unpacked”，选择本项目解压后的根目录。
 
-![Edge 扩展页与加载解压缩扩展](docs/images/edge-extensions-page.png)
+![Chromium 扩展页与加载解压缩扩展](docs/images/edge-extensions-page.png)
+
+> 截图示例来自 Edge；Chrome 中的入口和安装方式相同。
 
 4. 安装完成后，点击浏览器工具栏中的 TeamsLingo 图标，再进入“API 配置”页。
 5. 填写翻译服务配置，包括 API 格式、Endpoint、API Key、Model，以及源语言模式和目标语言。
 
 ![TeamsLingo 设置页](docs/images/settings-page.png)
 
-> **Edge Add-ons 商店：** 即将上线 — 届时可以直接从 Microsoft Edge Add-ons 商店安装。
+> **安装方式：** 当前仓库版本可通过开发者模式在 Edge 和 Chrome 中安装；扩展商店版本后续再发布。
 
 ## 使用
 
-1. 用 Edge 打开 Teams Web 会议页面。
+1. 用 Edge 或 Chrome 打开 Teams Web 会议页面。
 2. 在 Teams 中开启“隐藏实时字幕 / Live Captions”。
 3. TeamsLingo 会自动在页面右侧显示悬浮翻译窗口；当一句字幕稳定后，译文会显示在字幕旁和侧边面板中。
 4. 需要时可通过面板导出原文字幕或双语字幕记录。
@@ -131,6 +135,7 @@ Microsoft Region: 按 Azure 资源填写；全局单服务 Translator 可留空
 
 ## 功能特点
 
+- **支持 Edge / Chrome 安装** — 可作为解压扩展安装到 Microsoft Edge 和 Google Chrome。
 - **实时字幕翻译** — 监听 Teams 实时字幕，在一句话讲完后自动调用翻译 API。
 - **多种翻译引擎** — 支持 OpenAI、OpenAI 兼容 API（包括 Poe 和本地 LLM API）、Google Cloud Translation 和 Microsoft Translator。
 - **可配置语言对** — 可自动识别源语言，或固定为 Teams 支持的转写语言；目标语言支持多种常用语言。
@@ -143,7 +148,7 @@ Microsoft Region: 按 Azure 资源填写；全局单服务 Translator 可留空
 
 ## 注意
 
-- 浏览器扩展只能运行在 Teams **Web** 页面（teams.microsoft.com / teams.cloud.microsoft / teams.live.com），不支持 Teams 桌面客户端。
+- 该浏览器扩展可安装在 Microsoft Edge 和 Google Chrome 中，但只能运行在 Teams **Web** 页面（teams.microsoft.com / teams.cloud.microsoft / teams.live.com），不支持 Teams 桌面客户端。
 - 因为 Endpoint 可配置，扩展声明了较宽的 `http/https` host permission，用于后台脚本向你的翻译 API 发请求。
 
 ## 隐私

@@ -4,29 +4,33 @@
 
 <img src="TeamsLingo_3D.png" width="160" align="right" />
 
-Real-time translation of Microsoft Teams live captions for Microsoft Edge browser (Windows, macOS, Linux). TeamsLingo monitors the caption feed in Teams Web meetings, sends each sentence to a translation API, supports OpenAI, OpenAI-compatible endpoints, local LLM APIs, Google Translate, and Microsoft Translator, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
+A browser extension for real-time translation of Microsoft Teams live captions on Teams Web, installable in Microsoft Edge and Google Chrome (Windows, macOS, Linux). TeamsLingo monitors the caption feed in Teams Web meetings, sends each sentence to a translation API, supports OpenAI, OpenAI-compatible endpoints, local LLM APIs, Google Translate, and Microsoft Translator, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
 
 
 ---
 
 ## Install from Source
 
-1. Open `edge://extensions/` in Microsoft Edge.
-2. Enable **Developer mode** using the toggle on the sidebar or page.
+1. Open the extensions page in your browser:
+   - Edge: `edge://extensions/`
+   - Chrome: `chrome://extensions/`
+2. Enable **Developer mode** using the toggle on the page.
 3. Click **Load unpacked** and select this project directory.
 
-![Edge extensions page and Load unpacked button](docs/images/edge-extensions-page.png)
+![Chromium extensions page and Load unpacked button](docs/images/edge-extensions-page.png)
+
+> The screenshot is from Edge; the flow is the same in Chrome.
 
 4. After installation, click the TeamsLingo toolbar icon and open the **API Configuration** page.
 5. Fill in your translation settings, including API format, endpoint, API key, model, source language mode, and target language.
 
 ![TeamsLingo settings page](docs/images/settings-page.png)
 
-> **Edge Add-ons store:** Coming soon — you'll be able to install directly from the Microsoft Edge Add-ons store.
+> **Availability:** The current package can be loaded through Developer mode in both Edge and Chrome. Store listings are not published yet.
 
 ## Usage
 
-1. Open a Teams Web meeting in Edge.
+1. Open a Teams Web meeting in Edge or Chrome.
 2. Turn on **Live Captions** in Teams.
 3. TeamsLingo will automatically show a floating translation panel on the right side of the page. Once a caption sentence settles, the translation appears both inline and in the side panel.
 4. You can export either the source captions or a bilingual transcript from the panel when needed.
@@ -133,6 +137,7 @@ The extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specif
 
 ## Features
 
+- **Edge / Chrome ready** — Can be installed as an unpacked extension in Microsoft Edge and Google Chrome.
 - **Real-time caption translation** — Monitors Teams live captions and translates each completed sentence automatically.
 - **Multiple translation engines** — Supports OpenAI, OpenAI-compatible APIs (including Poe and local LLM APIs), Google Cloud Translation, and Microsoft Translator.
 - **Configurable language pair** — Auto-detect or fix the source language; choose from a wide range of target languages.
@@ -145,7 +150,7 @@ The extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specif
 
 ## Notes
 
-- This extension only works on Teams **Web** pages (teams.microsoft.com / teams.cloud.microsoft / teams.live.com) — it does not support the Teams desktop client.
+- This browser extension can be installed in Microsoft Edge and Google Chrome, but it only works on Teams **Web** pages (teams.microsoft.com / teams.cloud.microsoft / teams.live.com) — it does not support the Teams desktop client.
 - Because the translation API endpoint is fully user-configurable, the extension declares broad `http/https` host permissions so the background service worker can make requests to your chosen API.
 
 ---

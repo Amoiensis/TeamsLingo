@@ -1,15 +1,15 @@
 {
   "extensionName": {
     "message": "TeamsLingo",
-    "description": "Extension name shown in the browser UI and Edge Add-ons listing."
+    "description": "Extension name shown in the browser UI and extension store listings."
   },
   "extensionShortName": {
     "message": "TeamsLingo",
     "description": "Short extension name used where UI space is limited."
   },
   "extensionDescription": {
-    "message": "Real-time translation of Microsoft Teams live captions. Supports OpenAI, local LLM, Google Translate, and Microsoft APIs.",
-    "description": "Extension description shown in the manifest and Edge Add-ons listing."
+    "message": "Real-time translation of Microsoft Teams Web live captions. Supports OpenAI, local LLM, Google Translate, and Microsoft Translator.",
+    "description": "Extension description shown in the manifest and extension store listings."
   },
   "extensionActionTitle": {
     "message": "TeamsLingo",

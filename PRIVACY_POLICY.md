@@ -1,10 +1,10 @@
 # TeamsLingo Privacy Policy
 
-**Last updated: 2026-04-16**
+**Last updated: 2026-04-22**
 
 ## Overview
 
-TeamsLingo ("the Extension") is a Microsoft Edge browser extension that translates Microsoft Teams live captions in real time. This privacy policy explains what data the Extension collects, how it is used, and how it is protected.
+TeamsLingo ("the Extension") is a browser extension for Microsoft Edge and Google Chrome that translates Microsoft Teams live captions in real time on Teams Web. This privacy policy explains what data the Extension collects, how it is used, and how it is protected.
 
 ## Author
 
