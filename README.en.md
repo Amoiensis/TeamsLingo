@@ -189,6 +189,7 @@ TeamsLingo does not collect, store, or transmit any personal data. See [PRIVACY_
 ## Links
 
 - **GitHub:** https://github.com/Amoiensis/TeamsLingo
-- **Releases:** https://github.com/Amoiensis/TeamsLingo/releases
+- **Latest release notes:** https://github.com/Amoiensis/TeamsLingo/releases/latest
+- **Latest package download:** https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip
 - **Update guide:** [docs/UPDATE_GUIDE.en.md](docs/UPDATE_GUIDE.en.md)
 - **Issues:** https://github.com/Amoiensis/TeamsLingo/issues

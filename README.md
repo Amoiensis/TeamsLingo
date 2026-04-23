@@ -184,6 +184,7 @@ TeamsLingo 不收集、存储或传输任何个人数据。详见 [PRIVACY_POLIC
 ## 链接
 
 - **GitHub：** https://github.com/Amoiensis/TeamsLingo
-- **Releases：** https://github.com/Amoiensis/TeamsLingo/releases
+- **最新正式版说明：** https://github.com/Amoiensis/TeamsLingo/releases/latest
+- **最新安装包下载：** https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip
 - **更新指引：** [docs/UPDATE_GUIDE.md](docs/UPDATE_GUIDE.md)
 - **Issues：** https://github.com/Amoiensis/TeamsLingo/issues

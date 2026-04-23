@@ -45,7 +45,7 @@
         </div>
 
         <div class="grid">
-          <label class="field">
+          <label id="providerField" class="field">
             <span data-i18n="options.provider">翻译服务</span>
             <select id="provider">
               <option value="openai" data-i18n="options.providerOpenAI">OpenAI 兼容 API / Poe</option>
@@ -54,7 +54,7 @@
             </select>
           </label>
 
-          <label class="field provider-openai">
+          <label class="field provider-openai" hidden>
             <span data-i18n="options.apiFormat">API 格式</span>
             <select id="apiFormat">
               <option value="chat_completions">Chat Completions API</option>
@@ -67,7 +67,7 @@
           <summary data-i18n="options.advancedSettings">高级设置</summary>
           <div class="provider-advanced-body">
             <div class="grid">
-              <label class="field">
+              <label id="endpointField" class="field">
                 <span data-i18n="options.endpoint">API Endpoint 或 Base URL</span>
                 <input id="endpoint" type="url" placeholder="https://api.openai.com/v1/chat/completions" autocomplete="off">
                 <small id="endpointHelp" data-i18n="options.endpointHelpResponses">Responses API 可填 https://api.poe.com/v1，插件会自动请求 /responses。</small>
@@ -88,7 +88,7 @@
           </div>
         </details>
 
-        <label class="field provider-openai">
+        <label class="field provider-openai" hidden>
           <span data-i18n="options.model">Model</span>
           <input id="model" type="text" placeholder="gpt-4o-mini" autocomplete="off">
         </label>
@@ -117,9 +117,9 @@
           <label class="field">
             <span data-i18n="options.translationMode">翻译模式</span>
             <select id="translationMode">
-              <option value="fast" data-i18n="options.translationModeFast">极速</option>
-              <option value="balanced" data-i18n="options.translationModeBalanced">均衡</option>
               <option value="complete" data-i18n="options.translationModeComplete">整句优先</option>
+              <option value="balanced" data-i18n="options.translationModeBalanced">均衡</option>
+              <option value="fast" data-i18n="options.translationModeFast">极速</option>
             </select>
             <small data-i18n="options.translationModeHelp">根据源语言自动调整静默等待、增量合并和最大持有时间。</small>
           </label>
@@ -160,20 +160,22 @@
         <div class="update-card-header">
           <div>
             <h2 id="updateTitle" data-i18n="options.updateTitle">版本更新</h2>
-            <p data-i18n="options.updateDescription">检查 GitHub Releases 是否有新的正式版本；如有更新，可直接跳转查看发布说明和更新指引。</p>
+            <p data-i18n="options.updateDescription">检查 GitHub 最新正式版；如有更新，可直接查看更新说明和更新指引。</p>
           </div>
           <button id="checkUpdate" type="button" class="secondary" data-i18n="options.updateCheck">检查更新</button>
         </div>
 
-        <div class="update-meta">
-          <div class="update-meta-item">
-            <span data-i18n="options.currentVersion">当前版本</span>
-            <strong id="currentVersion">v1.0.2</strong>
-          </div>
-          <div class="update-meta-item">
-            <span data-i18n="options.latestVersion">最新正式版</span>
+        <div class="update-meta-inline">
+          <span class="update-meta-inline-item">
+            <span class="update-meta-label" data-i18n="options.currentVersion">当前版本</span>
+            <span class="update-meta-separator">:</span>
+            <strong id="currentVersion">v1.0.3</strong>
+          </span>
+          <span class="update-meta-inline-item">
+            <span class="update-meta-label" data-i18n="options.latestVersion">最新正式版</span>
+            <span class="update-meta-separator">:</span>
             <strong id="latestVersion" data-i18n="options.updateLatestUnknown">未确认</strong>
-          </div>
+          </span>
         </div>
 
         <div id="updateStatus" class="update-status" role="status" aria-live="polite"></div>
@@ -182,12 +184,12 @@
           <a
             id="releaseLink"
             class="button-link secondary-link"
-            href="https://github.com/Amoiensis/TeamsLingo/releases"
+            href="https://github.com/Amoiensis/TeamsLingo/releases/latest"
             target="_blank"
             rel="noopener"
             hidden
             data-i18n="options.updateViewRelease"
-          >查看发布说明</a>
+          >更新说明</a>
           <a
             id="updateGuideLink"
             class="button-link secondary-link"
@@ -201,7 +203,7 @@
       </section>
 
       <footer class="footer">
-      <span id="footerVersion" class="footer-version">v1.0.2</span>
+      <span id="footerVersion" class="footer-version">v1.0.3</span>
       <a href="https://github.com/Amoiensis/TeamsLingo" target="_blank" rel="noopener" class="footer-link">GitHub</a>
       </footer>
     </main>

@@ -7,15 +7,17 @@
 TeamsLingo 的设置页现在提供“版本更新”区域：
 
 - 会尝试访问 GitHub Releases 的最新正式版本。
-- 如果发现新版本，会显示当前版本与最新版本，并提供“查看发布说明”和“查看更新指引”入口。
+- 如果发现新版本，会显示当前版本与最新版本，并提供“更新说明”和“查看更新指引”入口。
 - 如果无法访问项目发布网址，会显示“因为无法访问项目发布网址，暂时无法确认是否有更新。”
 
-> 当前使用的是 GitHub 正式版发布页：`https://github.com/Amoiensis/TeamsLingo/releases`
+> 最新正式版说明：<https://github.com/Amoiensis/TeamsLingo/releases/latest>
+>
+> 直接下载最新安装包：<https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip>
 
 ## 如何更新
 
-1. 打开 GitHub Releases 页面，确认最新正式版本和发布说明。
-2. 下载对应的发布包，例如 `TeamsLingo-vX.Y.Z.zip`。
+1. 直接打开最新正式版说明：<https://github.com/Amoiensis/TeamsLingo/releases/latest>
+2. 直接下载最新发布包 `TeamsLingo.zip`：<https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip>
 3. 解压到本地目录。
 4. 打开浏览器扩展管理页：
    - Edge：`edge://extensions/`
@@ -30,7 +32,7 @@ TeamsLingo 的设置页现在提供“版本更新”区域：
 如果你当前加载的是本地开发目录，而不是 GitHub Releases 下载包，建议：
 
 1. 先备份需要保留的本地修改。
-2. 查看正式版发布说明，确认是否包含你需要的修复或功能。
+2. 查看最新正式版的更新说明，确认是否包含你需要的修复或功能。
 3. 决定继续使用本地开发版，还是切换到正式版目录重新加载扩展。
 
 ## 发布说明中建议关注的内容

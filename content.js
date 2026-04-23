@@ -20,7 +20,7 @@
     sourceLanguageMode: "auto",
     sourceLanguage: "",
     targetLanguage: "Chinese Simplified",
-    translationMode: "balanced",
+    translationMode: "complete",
     uiLanguage: DEFAULT_UI_LANGUAGE,
     panelTheme: "system",
     settleDelayMs: 1400,

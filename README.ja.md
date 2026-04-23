@@ -183,6 +183,7 @@ TeamsLingo は個人データを収集、保存、送信しません。詳細は
 ## リンク
 
 - **GitHub:** https://github.com/Amoiensis/TeamsLingo
-- **Releases:** https://github.com/Amoiensis/TeamsLingo/releases
+- **最新正式版の案内:** https://github.com/Amoiensis/TeamsLingo/releases/latest
+- **最新パッケージのダウンロード:** https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip
 - **更新ガイド:** [docs/UPDATE_GUIDE.ja.md](docs/UPDATE_GUIDE.ja.md)
 - **Issues:** https://github.com/Amoiensis/TeamsLingo/issues

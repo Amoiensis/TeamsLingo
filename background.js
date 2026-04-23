@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS = {
   sourceLanguageMode: "auto",
   sourceLanguage: "",
   targetLanguage: "Chinese Simplified",
-  translationMode: "balanced",
+  translationMode: "complete",
   thinkingControlMode: "none",
   thinkingControlSignature: "",
   thinkingControlDetection: "unknown",

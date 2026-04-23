@@ -7,15 +7,17 @@
 TeamsLingo の設定ページには **バージョン更新** セクションがあります。
 
 - GitHub Releases の最新正式版を確認します。
-- 新しい版が見つかった場合は、現在のバージョン、最新バージョン、リリース内容、更新ガイドへのリンクを表示します。
+- 新しい版が見つかった場合は、現在のバージョン、最新バージョン、更新内容、更新ガイドへのリンクを表示します。
 - プロジェクトのリリース URL にアクセスできない場合は、更新状況を確認できない旨を表示します。
 
-> 正式版の公開ページ: `https://github.com/Amoiensis/TeamsLingo/releases`
+> 最新正式版の案内: <https://github.com/Amoiensis/TeamsLingo/releases/latest>
+>
+> 最新パッケージの直接ダウンロード: <https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip>
 
 ## 更新方法
 
-1. GitHub Releases ページを開き、最新正式版の内容を確認します。
-2. `TeamsLingo-vX.Y.Z.zip` のようなリリースパッケージをダウンロードします。
+1. 最新正式版の更新内容を直接開きます: <https://github.com/Amoiensis/TeamsLingo/releases/latest>
+2. 最新パッケージ `TeamsLingo.zip` を直接ダウンロードします: <https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip>
 3. ローカルディレクトリに展開します。
 4. ブラウザーの拡張機能管理ページを開きます。
    - Edge: `edge://extensions/`
@@ -30,7 +32,7 @@ TeamsLingo の設定ページには **バージョン更新** セクションが
 現在 GitHub Releases の配布パッケージではなく、ローカル開発ディレクトリを読み込んでいる場合は次を推奨します。
 
 1. 保持したいローカル変更を先にバックアップします。
-2. リリースノートを確認し、必要な修正や機能が正式版に含まれているかを確認します。
+2. 最新正式版の更新内容を確認し、必要な修正や機能が含まれているかを確認します。
 3. ローカル開発版を使い続けるか、正式版ディレクトリへ切り替えて拡張を再読み込みするかを判断します。
 
 ## リリースノートで確認すべき点

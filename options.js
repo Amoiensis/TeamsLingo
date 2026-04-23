@@ -5,7 +5,7 @@ const DEFAULT_MICROSOFT_ENDPOINT = "https://api-edge.cognitive.microsofttranslat
 const MANIFEST = chrome.runtime.getManifest();
 const CURRENT_EXTENSION_VERSION = MANIFEST.version;
 const PROJECT_REPO_URL = MANIFEST.homepage_url || "https://github.com/Amoiensis/TeamsLingo";
-const PROJECT_RELEASES_URL = `${PROJECT_REPO_URL}/releases`;
+const PROJECT_RELEASES_URL = `${PROJECT_REPO_URL}/releases/latest`;
 const PROJECT_UPDATE_GUIDE_URLS = {
   "zh-CN": `${PROJECT_REPO_URL}/blob/main/docs/UPDATE_GUIDE.md`,
   en: `${PROJECT_REPO_URL}/blob/main/docs/UPDATE_GUIDE.en.md`,
@@ -24,7 +24,7 @@ const DEFAULT_SETTINGS = {
   sourceLanguageMode: "auto",
   sourceLanguage: "",
   targetLanguage: "Chinese Simplified",
-  translationMode: "balanced",
+  translationMode: "complete",
   uiLanguage: DEFAULT_UI_LANGUAGE,
   panelTheme: "system",
   settleDelayMs: 1400,
@@ -74,8 +74,10 @@ const fields = {
   uiLanguage: document.getElementById("uiLanguage"),
   panelTheme: document.getElementById("panelTheme"),
   provider: document.getElementById("provider"),
+  providerField: document.getElementById("providerField"),
   providerAdvanced: document.getElementById("providerAdvanced"),
   apiFormat: document.getElementById("apiFormat"),
+  endpointField: document.getElementById("endpointField"),
   endpoint: document.getElementById("endpoint"),
   endpointHelp: document.getElementById("endpointHelp"),
   apiKey: document.getElementById("apiKey"),
@@ -303,6 +305,8 @@ function syncProviderControls() {
 
   fields.providerAdvanced.classList.toggle("openai-mode", provider === "openai");
   fields.providerAdvanced.open = provider === "openai";
+  fields.providerField.classList.toggle("full-span", provider !== "openai");
+  fields.endpointField.classList.toggle("full-span", provider !== "microsoft");
   syncApiPlaceholder();
   syncApiKeyPlaceholder();
 }
