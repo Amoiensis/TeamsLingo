@@ -21,7 +21,10 @@ Microsoft Edge と Google Chrome で利用できる Teams Web のリアルタイ
 > スクリーンショットは Edge の例ですが、Chrome でも流れは同じです。
 
 4. インストール後、ブラウザーツールバーの TeamsLingo アイコンをクリックし、**設定** ページを開きます。
-5. 翻訳サービス、API 形式、Endpoint、API Key、Model、原文言語モード、翻訳先言語を設定します。Google 翻訳 / Microsoft Translator は API Key を空欄にすると無料モードを使えます。
+5. 利用する翻訳方法を 1 つ選び、必要な項目だけ設定します。
+   - OpenAI 互換 API / Poe / ローカル LLM: API 形式、Endpoint、API Key、Model を設定します。
+   - Google Translate: API Key を空欄にすると無料モード、Google Cloud API Key を入れると公式 API を使います。
+   - Microsoft Translator: API Key を空欄にすると無料モード、Azure Translator Key を入れると公式 API を使います。必要な場合のみ Region も設定します。
 
 ![TeamsLingo settings page](docs/images/settings-page.png)
 
@@ -40,123 +43,27 @@ Microsoft Edge と Google Chrome で利用できる Teams Web のリアルタイ
 
 ## 翻訳サービス設定
 
-TeamsLingo は 3 種類の翻訳サービスに対応しています。
+TeamsLingo は 3 つの翻訳方法に対応しています。
 
-### OpenAI 互換 API、Poe、ローカル LLM サービス
+### 1. OpenAI 互換 API / Poe / ローカル LLM
 
-OpenAI 互換の 2 つのリクエスト形式に対応します。
+- 既存の API サービス、Poe、またはローカルモデルを使いたい場合向けです。
+- `API 形式`、`Endpoint`、`API Key`、`Model` を設定します。
+- サービスに合わせて Chat Completions または Responses を選びます。Poe や一部のホスト型サービスは Responses、ローカル LLM は Chat Completions が一般的です。
 
-**Chat Completions API**
+### 2. Google Translate
 
-```http
-POST https://api.openai.com/v1/chat/completions
-Authorization: Bearer <API Key>
-Content-Type: application/json
-```
+- `API Key` を空欄にすると無料モードを使えます。
+- Google Cloud API Key を設定すると、公式 Google Cloud Translation API を使います。
 
-リクエスト本文には `model`、`temperature`、`messages` を含みます。
+### 3. Microsoft Translator
 
-**Responses API**
+- `API Key` を空欄にすると無料モードを使えます。
+- Azure Translator Key を設定すると、公式 Microsoft Translator API を使います。Azure リソースで必要な場合のみ `Microsoft Region` を設定してください。
 
-```http
-POST https://api.poe.com/v1/responses
-Authorization: Bearer <API Key>
-Content-Type: application/json
-```
-
-リクエスト本文には `model`、`temperature`、`input` を含みます。Endpoint に `https://api.poe.com/v1` を指定した場合、拡張機能が API 形式に応じて `/responses` または `/chat/completions` を自動で補完します。
-
-**Poe の設定例**
-
-```text
-翻訳サービス: OpenAI 互換 API / Poe
-API 形式: Responses API
-API Endpoint / Base URL: https://api.poe.com/v1
-Model: gpt-4o-mini
-```
-
-**ローカル LLM サービスの設定例**
-
-```text
-翻訳サービス: OpenAI 互換 API / Poe
-API 形式: Chat Completions API
-API Endpoint / Base URL: http://localhost:11434/v1
-Model: gemma3:4b
-```
-
-### Google 翻訳
-
-デフォルトでは無料の Google Web 翻訳経路を使います。
-
-```http
-POST https://translate.googleapis.com/translate_a/t?client=gtx&dt=t&sl=auto&tl=zh-CN
-Content-Type: application/x-www-form-urlencoded
-```
-
-**無料モードの設定例**
-
-```text
-翻訳サービス: Google Translate
-API Endpoint / Base URL: 空欄、または https://translate.googleapis.com/translate_a/t
-API Key: 空欄
-```
-
-API Key を入力すると、公式の Google Cloud Translation Basic v2 に切り替わります。
-
-```http
-POST https://translation.googleapis.com/language/translate/v2
-```
-
-拡張機能は `q` と `target` を送信し、原文言語を固定した場合は `source` も追加します。自動判定時は `sl=auto` を使います。
-
-### Microsoft Translator
-
-デフォルトでは無料の Microsoft Edge 翻訳経路を使います。
-
-```http
-GET https://edge.microsoft.com/translate/auth
-POST https://api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh-Hans&includeSentenceLength=true
-Authorization: Bearer <edge auth token>
-```
-
-**無料モードの設定例**
-
-```text
-翻訳サービス: Microsoft Translator
-API Endpoint / Base URL: 空欄、または https://api-edge.cognitive.microsofttranslator.com/translate
-API Key: 空欄
-Microsoft Region: 空欄
-```
-
-API Key を入力すると、公式の Microsoft Translator Text API v3 に切り替わります。
-
-```http
-POST https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh-Hans
-```
-
-**公式 API モードの設定例**
-
-```text
-翻訳サービス: Microsoft Translator
-API Endpoint / Base URL: 空欄、または https://api.cognitive.microsofttranslator.com
-API Key: Azure Translator key
-Microsoft Region: Azure リソースに合わせて入力。グローバル単体 Translator なら空欄可
-```
-
-無料モードでは最初に Edge Web 翻訳トークンを取得し、その後 `api-edge.cognitive.microsofttranslator.com` を呼び出します。`Microsoft Region` は公式 API モードでのみ使用されます。
-
-> 無料の Web 翻訳経路は非公式な Web インターフェースに依存するため、レート制限や仕様変更が起こる場合があります。安定した SLA が必要な場合は、公式の有料 API Key を利用してください。
+> Google / Microsoft の無料モードは Web 翻訳経路に依存しており、安定性は保証されません。レート制限、仕様変更、停止が起こる可能性があります。安定性を重視する場合は、公式の有料 API を使ってください。
 
 ---
-
-## 動作の仕組み
-
-- 主な DOM セレクターは Teams の字幕要素 `data-tid="closed-caption-text"` と `data-tid="author"` です。
-- 字幕テキストが設定時間以上変化しなくなると、その文が完了したとみなして翻訳キューへ送ります。
-- 原文言語はデフォルトで自動判定され、必要に応じて Teams 対応の会議発話 / 文字起こし言語へ固定できます。
-- 翻訳先言語のプルダウンには Teams のリアルタイム翻訳字幕が対応する言語を表示し、カスタム入力も残しています。
-- 同一話者・同一字幕の組み合わせは 30 分間重複排除し、Teams の仮想リスト再描画による重複翻訳を防ぎます。
-- API Key は `chrome.storage.local` にのみ保存され、会議ファイルへは書き出しません。
 
 ## 主な機能
 

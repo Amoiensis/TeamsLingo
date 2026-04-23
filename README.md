@@ -22,7 +22,10 @@
 > 截图示例来自 Edge；Chrome 中的入口和安装方式相同。
 
 4. 安装完成后，点击浏览器工具栏中的 TeamsLingo 图标，再进入“配置”页。
-5. 填写翻译服务配置，包括 API 格式、Endpoint、API Key、Model，以及源语言模式和目标语言。其中 Google 翻译 / 微软翻译可直接留空 API Key 使用免费模式。
+5. 选择一种翻译方式并填写必要配置：
+   - OpenAI 兼容 API / Poe / 本地 LLM：填写 API 格式、Endpoint、API Key、Model。
+   - Google Translate：API Key 留空可用免费模式；填写 Google Cloud API Key 则走官方接口。
+   - Microsoft Translator：API Key 留空可用免费模式；填写 Azure Translator Key（按需再填 Region）则走官方接口。
 
 ![TeamsLingo 设置页](docs/images/settings-page.png)
 
@@ -41,123 +44,27 @@
 
 ## 翻译服务配置
 
-支持三类翻译服务。
+只需要按你准备使用的服务选择其一：
 
-### OpenAI 兼容 API（含 Poe / 本地 LLM 服务）
+### 1. OpenAI 兼容 API / Poe / 本地 LLM
 
-支持两种 OpenAI 兼容请求格式。
+- 适合已经有 API 服务、Poe，或本地模型服务的人。
+- 需要填写 `API 格式`、`Endpoint`、`API Key`、`Model`。
+- `API 格式` 选 Chat Completions 或 Responses；Poe 和部分服务通常用 Responses，本地 LLM 常见为 Chat Completions。
 
-Chat Completions API：
+### 2. Google Translate
 
-```http
-POST https://api.openai.com/v1/chat/completions
-Authorization: Bearer <API Key>
-Content-Type: application/json
-```
+- `API Key` 留空时使用免费模式，上手最简单。
+- 填写 Google Cloud API Key 时，走官方 Google Cloud Translation 接口。
 
-请求体包含 `model`、`temperature` 和 `messages`。
+### 3. Microsoft Translator
 
-Responses API：
+- `API Key` 留空时使用免费模式。
+- 填写 Azure Translator Key 后，走官方 Microsoft Translator 接口；如 Azure 资源要求，再填写 `Microsoft Region`。
 
-```http
-POST https://api.poe.com/v1/responses
-Authorization: Bearer <API Key>
-Content-Type: application/json
-```
-
-请求体包含 `model`、`temperature` 和 `input`。如果 Endpoint 填 `https://api.poe.com/v1`，插件会根据 API 格式自动拼接 `/responses` 或 `/chat/completions`。
-
-Poe 示例配置：
-
-```text
-翻译服务: OpenAI 兼容 API / Poe
-API 格式: Responses API
-API Endpoint 或 Base URL: https://api.poe.com/v1
-Model: gpt-4o-mini
-```
-
-本地 LLM 服务示例配置：
-
-```text
-翻译服务: OpenAI 兼容 API / Poe
-API 格式: Chat Completions API
-API Endpoint 或 Base URL: http://localhost:11434/v1
-Model: gemma3:4b
-```
-
-### Google Translate
-
-默认走免费 Google 网页翻译通道：
-
-```http
-POST https://translate.googleapis.com/translate_a/t?client=gtx&dt=t&sl=auto&tl=zh-CN
-Content-Type: application/x-www-form-urlencoded
-```
-
-免费模式示例配置：
-
-```text
-翻译服务: Google Translate
-API Endpoint 或 Base URL: 留空，或 https://translate.googleapis.com/translate_a/t
-API Key: 留空
-```
-
-如果填写了 API Key，则会改走官方 Google Cloud Translation Basic v2：
-
-```http
-POST https://translation.googleapis.com/language/translate/v2
-```
-
-插件会发送 `q`、`target`；固定源语言时会额外发送 `source`，自动识别时会使用 `sl=auto`。
-
-### Microsoft Translator
-
-默认走免费 Microsoft Edge 翻译通道：
-
-```http
-GET https://edge.microsoft.com/translate/auth
-POST https://api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh-Hans&includeSentenceLength=true
-Authorization: Bearer <edge auth token>
-```
-
-免费模式示例配置：
-
-```text
-翻译服务: Microsoft Translator
-API Endpoint 或 Base URL: 留空，或 https://api-edge.cognitive.microsofttranslator.com/translate
-API Key: 留空
-Microsoft Region: 留空
-```
-
-如果填写了 API Key，则会改走官方 Microsoft Translator Text API v3：
-
-```http
-POST https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh-Hans
-```
-
-官方 API 模式示例配置：
-
-```text
-翻译服务: Microsoft Translator
-API Endpoint 或 Base URL: 留空，或 https://api.cognitive.microsofttranslator.com
-API Key: Azure Translator key
-Microsoft Region: 按 Azure 资源填写；全局单服务 Translator 可留空
-```
-
-免费模式会先获取 Edge 网页翻译 token，再请求 `api-edge.cognitive.microsofttranslator.com`。如果填写了 Microsoft Region，则仅在官方 API 模式下发送 `Ocp-Apim-Subscription-Region`。
-
-> 免费网页翻译链路属于非官方网页接口，可能出现限流、失效或行为变更；如果你需要更稳定的 SLA，建议改用官方付费 API Key。
+> Google / Microsoft 的免费模式依赖网页翻译链路，不保证长期稳定，可能出现限流、失效或行为变更；如果你更看重稳定性，建议使用官方付费 API。
 
 ---
-
-## 工作方式
-
-- 主选择器来自当前目录中的 Teams 保存页样本：`data-tid="closed-caption-text"` 和 `data-tid="author"`。
-- 字幕文本不再变化超过配置的毫秒数后，扩展认为这句话已经讲完并入队翻译。
-- 源语言默认根据字幕内容自动识别；也可以固定为 Teams 支持的会议发言/转写语言。
-- 目标语言下拉列表使用 Teams 实时翻译字幕支持的目标语言，并保留自定义输入。
-- 相同发言人和相同字幕会在 30 分钟内去重，避免 Teams 虚拟列表重绘造成重复翻译。
-- API key 存在 `chrome.storage.local`，不会写入会议文件。
 
 ## 功能特点
 

@@ -22,7 +22,10 @@ A browser extension for real-time translation of Microsoft Teams live captions o
 > The screenshot is from Edge; the flow is the same in Chrome.
 
 4. After installation, click the TeamsLingo toolbar icon and open the **Settings** page.
-5. Fill in your translation settings, including API format, endpoint, API key, model, source language mode, and target language. For Google Translate / Microsoft Translator, you can leave the API key blank to use free mode.
+5. Pick one translation option and fill in only the required fields:
+   - OpenAI-compatible API / Poe / local LLM: set API format, endpoint, API key, and model.
+   - Google Translate: leave API key blank for free mode, or provide a Google Cloud API key for the official API.
+   - Microsoft Translator: leave API key blank for free mode, or provide an Azure Translator key (and Region if needed) for the official API.
 
 ![TeamsLingo settings page](docs/images/settings-page.png)
 
@@ -41,124 +44,25 @@ A browser extension for real-time translation of Microsoft Teams live captions o
 
 ## Translation Service Configuration
 
-TeamsLingo supports three types of translation services.
+TeamsLingo supports three translation options.
 
-### OpenAI-compatible APIs, Poe, and local LLM services
+### 1. OpenAI-compatible API / Poe / local LLM
 
-TeamsLingo supports two OpenAI-compatible request formats.
+- Use this if you already have an API service, Poe access, or a local model server.
+- Fill in `API Format`, `Endpoint`, `API Key`, and `Model`.
+- Choose Chat Completions or Responses based on your provider. Poe and some hosted services usually use Responses; local LLM services often use Chat Completions.
 
-**Chat Completions API:**
+### 2. Google Translate
 
-```http
-POST https://api.openai.com/v1/chat/completions
-Authorization: Bearer <API Key>
-Content-Type: application/json
-```
+- Leave `API Key` blank to use free mode.
+- Provide a Google Cloud API key to use the official Google Cloud Translation API.
 
-The request body includes `model`, `temperature`, and `messages`.
+### 3. Microsoft Translator
 
-**Responses API:**
+- Leave `API Key` blank to use free mode.
+- Provide an Azure Translator key to use the official Microsoft Translator API. Fill in `Microsoft Region` only if your Azure resource requires it.
 
-```http
-POST https://api.poe.com/v1/responses
-Authorization: Bearer <API Key>
-Content-Type: application/json
-```
-
-The request body includes `model`, `temperature`, and `input`. If the endpoint is `https://api.poe.com/v1`, the extension automatically appends `/responses` or `/chat/completions` based on the selected API format.
-
-**Poe example configuration:**
-
-```text
-Translation Service: OpenAI-compatible API / Poe
-API Format: Responses API
-API Endpoint / Base URL: https://api.poe.com/v1
-Model: gpt-4o-mini
-```
-
-**Local LLM service example configuration:**
-
-```text
-Translation Service: OpenAI-compatible API / Poe
-API Format: Chat Completions API
-API Endpoint / Base URL: http://localhost:11434/v1
-Model: gemma3:4b
-```
-
-### Google Translate
-
-By default, TeamsLingo uses the free Google web translate path:
-
-```http
-POST https://translate.googleapis.com/translate_a/t?client=gtx&dt=t&sl=auto&tl=zh-CN
-Content-Type: application/x-www-form-urlencoded
-```
-
-**Free mode example configuration:**
-
-```text
-Translation Service: Google Translate
-API Endpoint / Base URL: (leave blank, or https://translate.googleapis.com/translate_a/t)
-API Key: leave blank
-```
-
-If you provide an API key, the extension switches to the official Google Cloud Translation Basic v2 endpoint:
-
-```http
-POST https://translation.googleapis.com/language/translate/v2
-```
-
-The extension sends `q` and `target`; when the source language is fixed it also sends `source`, and in auto mode it uses `sl=auto`.
-
-### Microsoft Translator
-
-By default, TeamsLingo uses the free Microsoft Edge translate path:
-
-```http
-GET https://edge.microsoft.com/translate/auth
-POST https://api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh-Hans&includeSentenceLength=true
-Authorization: Bearer <edge auth token>
-```
-
-**Free mode example configuration:**
-
-```text
-Translation Service: Microsoft Translator
-API Endpoint / Base URL: (leave blank, or https://api-edge.cognitive.microsofttranslator.com/translate)
-API Key: leave blank
-Microsoft Region: leave blank
-```
-
-If you provide an API key, the extension switches to the official Microsoft Translator Text API v3:
-
-```http
-POST https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh-Hans
-```
-
-**Official API mode example configuration:**
-
-```text
-Translation Service: Microsoft Translator
-API Endpoint / Base URL: (leave blank, or https://api.cognitive.microsofttranslator.com)
-API Key: Azure Translator key
-Microsoft Region: Fill in per your Azure resource; leave blank for global single-service Translator
-```
-
-In free mode, the extension first fetches an Edge web translate token and then calls `api-edge.cognitive.microsofttranslator.com`. `Microsoft Region` is only used for the official API flow.
-
-> The free web translate path is based on unofficial web endpoints and may be rate-limited or changed by the provider. If you need a more stable SLA, use an official paid API key.
-In official API mode, the extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specified, it also sends `Ocp-Apim-Subscription-Region`.
-
----
-
-## How It Works
-
-- The main DOM selectors target Teams live caption elements: `data-tid="closed-caption-text"` and `data-tid="author"`.
-- Once caption text stops changing for a configurable number of milliseconds, the extension considers the sentence complete and queues it for translation.
-- Source language defaults to auto-detection; it can also be fixed to any Teams-supported spoken/transcription language.
-- Target language dropdown includes all Teams live caption target languages, plus a custom input option.
-- Identical speaker + caption pairs are deduplicated within a 30-minute window to prevent redundant translations caused by Teams' virtual list redraws.
-- API keys are stored in `chrome.storage.local` and never written to meeting files.
+> The free Google / Microsoft modes rely on web translation paths and are not guaranteed to stay stable. They may be rate-limited, changed, or stop working. If stability matters, use an official paid API.
 
 ---
 
