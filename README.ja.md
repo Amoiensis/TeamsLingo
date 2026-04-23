@@ -6,6 +6,14 @@
 
 Microsoft Edge と Google Chrome で利用できる Teams Web のリアルタイム字幕翻訳ブラウザー拡張です。TeamsLingo は Teams Web 会議ページ上のライブ字幕を監視し、設定した翻訳サービスに送信して翻訳します。無料で直接使える Google 翻訳と Microsoft Translator に加え、OpenAI および互換 API、Poe、ローカル LLM サービスにも対応しています。翻訳結果は元字幕の横と右側のフローティングパネルに同時表示され、会議字幕と訳文のエクスポートにも対応します。
 
+## クイックダウンロード
+
+すぐに使い始めたい場合は、まず最新のパッケージ版をダウンロードしてください。
+
+**[最新版 TeamsLingo パッケージをダウンロード（TeamsLingo.zip）](https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip)**
+
+ダウンロード後に展開し、下の「ソースからインストール」の手順に沿って Edge / Chrome に読み込んでください。
+
 ---
 
 ## ソースからインストール
@@ -91,6 +99,5 @@ TeamsLingo は個人データを収集、保存、送信しません。詳細は
 
 - **GitHub:** https://github.com/Amoiensis/TeamsLingo
 - **最新正式版の案内:** https://github.com/Amoiensis/TeamsLingo/releases/latest
-- **最新パッケージのダウンロード:** https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip
 - **更新ガイド:** [docs/UPDATE_GUIDE.ja.md](docs/UPDATE_GUIDE.ja.md)
 - **Issues:** https://github.com/Amoiensis/TeamsLingo/issues

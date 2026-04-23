@@ -6,6 +6,14 @@
 
 A browser extension for real-time translation of Microsoft Teams live captions on Teams Web, installable in Microsoft Edge and Google Chrome (Windows, macOS, Linux). TeamsLingo monitors the caption feed in Teams Web meetings, sends each sentence to your configured translation service, supports free direct Google Translate and Microsoft Translator paths plus OpenAI and compatible APIs, including Poe and local LLM services, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
 
+## Quick Download
+
+If you want to install it right away, download the latest packaged build first:
+
+**[Download the latest TeamsLingo package (TeamsLingo.zip)](https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip)**
+
+After downloading, unzip it and follow the installation steps below to load it in Edge or Chrome.
+
 
 ---
 
@@ -94,6 +102,5 @@ TeamsLingo does not collect, store, or transmit any personal data. See [PRIVACY_
 
 - **GitHub:** https://github.com/Amoiensis/TeamsLingo
 - **Latest release notes:** https://github.com/Amoiensis/TeamsLingo/releases/latest
-- **Latest package download:** https://github.com/Amoiensis/TeamsLingo/releases/latest/download/TeamsLingo.zip
 - **Update guide:** [docs/UPDATE_GUIDE.en.md](docs/UPDATE_GUIDE.en.md)
 - **Issues:** https://github.com/Amoiensis/TeamsLingo/issues
