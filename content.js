@@ -5,11 +5,15 @@
   const PANEL_ID = "tct-panel";
   const PANEL_MODE_FULL = "full";
   const PANEL_MODE_MINI = "mini";
+  const DEFAULT_OPENAI_ENDPOINT = "https://api.openai.com/v1/chat/completions";
+  const DEFAULT_RESPONSES_ENDPOINT = "https://api.poe.com/v1";
+  const DEFAULT_UI_LANGUAGE = resolveInitialUiLanguage();
+  const DEFAULT_PROVIDER = resolveDefaultProvider(DEFAULT_UI_LANGUAGE);
   const DEFAULT_SETTINGS = {
     enabled: true,
-    provider: "openai",
+    provider: DEFAULT_PROVIDER,
     apiFormat: "chat_completions",
-    endpoint: "https://api.openai.com/v1/chat/completions",
+    endpoint: resolveDefaultEndpoint(DEFAULT_PROVIDER, "chat_completions"),
     apiKey: "",
     model: "gpt-4o-mini",
     microsoftRegion: "",
@@ -17,13 +21,42 @@
     sourceLanguage: "",
     targetLanguage: "Chinese Simplified",
     translationMode: "balanced",
-    uiLanguage: "zh-CN",
+    uiLanguage: DEFAULT_UI_LANGUAGE,
     panelTheme: "system",
     settleDelayMs: 1400,
     minChars: 2,
     maxItems: 30,
     processExistingOnStart: false
   };
+
+  function resolveInitialUiLanguage() {
+    try {
+      const language = chrome?.i18n?.getUILanguage?.() || navigator?.language || "";
+      if (/^zh\b/i.test(language)) {
+        return "zh-CN";
+      }
+      if (/^ja\b/i.test(language)) {
+        return "ja";
+      }
+      return "en";
+    } catch (_error) {
+      return "zh-CN";
+    }
+  }
+
+  function resolveDefaultProvider(uiLanguage) {
+    return uiLanguage === "zh-CN" ? "microsoft" : "google";
+  }
+
+  function resolveDefaultEndpoint(provider, apiFormat) {
+    if (provider === "google") {
+      return "https://translate.googleapis.com/translate_a/t";
+    }
+    if (provider === "microsoft") {
+      return "https://api-edge.cognitive.microsofttranslator.com/translate";
+    }
+    return apiFormat === "responses" ? DEFAULT_RESPONSES_ENDPOINT : DEFAULT_OPENAI_ENDPOINT;
+  }
   const TRANSLATION_MODE_PRESETS = {
     fast: {
       compact: { baseSettleDelayMs: 1200, noPunctuationExtraDelayMs: 500, shortTextExtraDelayMs: 300, shortTextThreshold: 10, mergeWindowMs: 900, maxHoldMs: 2200 },
@@ -103,9 +136,12 @@
   function sanitizeSettings(input) {
     const next = { ...DEFAULT_SETTINGS, ...input };
     next.enabled = Boolean(next.enabled);
-    next.provider = ["openai", "google", "microsoft"].includes(next.provider) ? next.provider : "openai";
+    next.uiLanguage = ["en", "ja"].includes(next.uiLanguage) ? next.uiLanguage : "zh-CN";
+    next.provider = ["openai", "google", "microsoft"].includes(next.provider)
+      ? next.provider
+      : resolveDefaultProvider(next.uiLanguage);
     next.apiFormat = next.apiFormat === "responses" ? "responses" : "chat_completions";
-    next.endpoint = String(next.endpoint || "").trim();
+    next.endpoint = String(next.endpoint || "").trim() || resolveDefaultEndpoint(next.provider, next.apiFormat);
     next.apiKey = String(next.apiKey || "").trim();
     next.model = String(next.model || "").trim();
     next.microsoftRegion = String(next.microsoftRegion || "").trim();
@@ -115,7 +151,6 @@
     next.translationMode = ["fast", "balanced", "complete"].includes(next.translationMode)
       ? next.translationMode
       : DEFAULT_SETTINGS.translationMode;
-    next.uiLanguage = next.uiLanguage === "en" ? "en" : "zh-CN";
     next.panelTheme = ["system", "dark", "light"].includes(next.panelTheme) ? next.panelTheme : "system";
     next.settleDelayMs = clampNumber(next.settleDelayMs, 500, 6000, DEFAULT_SETTINGS.settleDelayMs);
     next.minChars = clampNumber(next.minChars, 1, 80, DEFAULT_SETTINGS.minChars);
@@ -934,7 +969,7 @@
       return Boolean(settings.endpoint && settings.model);
     }
     if (settings.provider === "google" || settings.provider === "microsoft") {
-      return Boolean(settings.apiKey);
+      return true;
     }
     return false;
   }

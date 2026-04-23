@@ -23,14 +23,14 @@ GitHub: https://github.com/Amoiensis/TeamsLingo
 
 The Extension processes the following data **locally on your device**:
 
-1. **Live caption text** — Read from the Teams web page DOM to detect spoken captions during meetings. This text is sent **only** to the translation API endpoint you configure.
-2. **API configuration** — Your translation API endpoint, API key, model name, and language preferences are stored locally in `chrome.storage.local` (the browser's built-in extension storage). This data never leaves your browser except to make the translation API calls you explicitly configured.
+1. **Live caption text** — Read from the Teams web page DOM to detect spoken captions during meetings. This text is sent **only** to the translation service endpoint you configure.
+2. **Translation settings** — Your translation service endpoint, API key, model name, and language preferences are stored locally in `chrome.storage.local` (the browser's built-in extension storage). This data never leaves your browser except to make the translation requests you explicitly configured.
 
 ### Translation API data flow
 
-- Caption text is sent directly from your browser to **your chosen** translation API endpoint (e.g., OpenAI, Google Translate, Microsoft Translator, or any OpenAI-compatible API).
+- Caption text is sent directly from your browser to **your chosen** translation service endpoint (e.g., Google Translate, Microsoft Translator, OpenAI, or an OpenAI-compatible API).
 - The Extension does **not** intermediate or proxy any translation requests through a third-party server.
-- You are solely responsible for the privacy practices of your chosen translation API provider.
+- You are solely responsible for the privacy practices of your chosen translation service provider.
 
 ## Permissions
 
@@ -38,18 +38,18 @@ The Extension requests the following browser permissions:
 
 | Permission | Purpose |
 |---|---|
-| `storage` | Store your API configuration and preferences locally |
+| `storage` | Store your translation settings and preferences locally |
 | `downloads` | Allow exporting translated captions as files |
 | `host_permissions` (teams.microsoft.com, teams.cloud.microsoft, teams.live.com) | Inject translation UI into Teams meeting pages |
-| `host_permissions` (https://\*/, http://\*/) | Send caption text to your configured translation API endpoint |
+| `host_permissions` (https://\*/, http://\*/) | Send caption text to your configured translation service endpoint |
 
 ## Third-Party Services
 
-The Extension may interact with third-party translation APIs based on your configuration:
+The Extension may interact with third-party translation services based on your configuration:
 
-- **OpenAI / OpenAI-compatible APIs** (e.g., Poe) — subject to [OpenAI Privacy Policy](https://openai.com/privacy)
-- **Google Cloud Translation API** — subject to [Google Privacy Policy](https://policies.google.com/privacy)
-- **Microsoft Translator API** — subject to [Microsoft Privacy Statement](https://privacy.microsoft.com/privacystatement)
+- **OpenAI and OpenAI-compatible APIs** (e.g., Poe) — subject to [OpenAI Privacy Policy](https://openai.com/privacy)
+- **Google Translate / Google Cloud Translation** — subject to [Google Privacy Policy](https://policies.google.com/privacy)
+- **Microsoft Edge Translate / Microsoft Translator** — subject to [Microsoft Privacy Statement](https://privacy.microsoft.com/privacystatement)
 
 The Extension does not endorse or control these services. Please review their respective privacy policies.
 

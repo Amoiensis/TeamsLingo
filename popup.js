@@ -1,8 +1,12 @@
+const DEFAULT_OPENAI_ENDPOINT = "https://api.openai.com/v1/chat/completions";
+const DEFAULT_RESPONSES_ENDPOINT = "https://api.poe.com/v1";
+const DEFAULT_UI_LANGUAGE = resolveInitialUiLanguage();
+const DEFAULT_PROVIDER = resolveDefaultProvider(DEFAULT_UI_LANGUAGE);
 const DEFAULT_SETTINGS = {
   enabled: true,
-  provider: "openai",
+  provider: DEFAULT_PROVIDER,
   apiFormat: "chat_completions",
-  endpoint: "https://api.openai.com/v1/chat/completions",
+  endpoint: resolveDefaultEndpoint(DEFAULT_PROVIDER, "chat_completions"),
   apiKey: "",
   model: "gpt-4o-mini",
   microsoftRegion: "",
@@ -10,9 +14,38 @@ const DEFAULT_SETTINGS = {
   sourceLanguage: "",
   targetLanguage: "Chinese Simplified",
   translationMode: "balanced",
-  uiLanguage: "zh-CN",
+  uiLanguage: DEFAULT_UI_LANGUAGE,
   panelTheme: "system"
 };
+
+function resolveInitialUiLanguage() {
+  try {
+    const language = chrome?.i18n?.getUILanguage?.() || navigator?.language || "";
+    if (/^zh\b/i.test(language)) {
+      return "zh-CN";
+    }
+    if (/^ja\b/i.test(language)) {
+      return "ja";
+    }
+    return "en";
+  } catch (_error) {
+    return "zh-CN";
+  }
+}
+
+function resolveDefaultProvider(uiLanguage) {
+  return uiLanguage === "zh-CN" ? "microsoft" : "google";
+}
+
+function resolveDefaultEndpoint(provider, apiFormat) {
+  if (provider === "google") {
+    return "https://translate.googleapis.com/translate_a/t";
+  }
+  if (provider === "microsoft") {
+    return "https://api-edge.cognitive.microsofttranslator.com/translate";
+  }
+  return apiFormat === "responses" ? DEFAULT_RESPONSES_ENDPOINT : DEFAULT_OPENAI_ENDPOINT;
+}
 
 const i18n = window.TCT_I18N;
 const enabled = document.getElementById("enabled");
@@ -65,7 +98,7 @@ function hasTranslationConfiguration(settings) {
     return Boolean(settings.endpoint && settings.model);
   }
   if (settings.provider === "google" || settings.provider === "microsoft") {
-    return Boolean(settings.apiKey);
+    return true;
   }
   return false;
 }

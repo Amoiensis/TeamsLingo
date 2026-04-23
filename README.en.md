@@ -1,10 +1,10 @@
 # TeamsLingo
 
-**[中文](README.md)** | English
+**[中文](README.md)** | English | [日本語](README.ja.md)
 
 <img src="TeamsLingo_3D.png" width="160" align="right" />
 
-A browser extension for real-time translation of Microsoft Teams live captions on Teams Web, installable in Microsoft Edge and Google Chrome (Windows, macOS, Linux). TeamsLingo monitors the caption feed in Teams Web meetings, sends each sentence to a translation API, supports OpenAI, OpenAI-compatible endpoints, local LLM APIs, Google Translate, and Microsoft Translator, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
+A browser extension for real-time translation of Microsoft Teams live captions on Teams Web, installable in Microsoft Edge and Google Chrome (Windows, macOS, Linux). TeamsLingo monitors the caption feed in Teams Web meetings, sends each sentence to your configured translation service, supports free direct Google Translate and Microsoft Translator paths plus OpenAI and compatible APIs, including Poe and local LLM services, and displays the translated text alongside the original captions as well as in a floating side window. Meeting captions and translations can also be exported.
 
 
 ---
@@ -21,8 +21,8 @@ A browser extension for real-time translation of Microsoft Teams live captions o
 
 > The screenshot is from Edge; the flow is the same in Chrome.
 
-4. After installation, click the TeamsLingo toolbar icon and open the **API Configuration** page.
-5. Fill in your translation settings, including API format, endpoint, API key, model, source language mode, and target language.
+4. After installation, click the TeamsLingo toolbar icon and open the **Settings** page.
+5. Fill in your translation settings, including API format, endpoint, API key, model, source language mode, and target language. For Google Translate / Microsoft Translator, you can leave the API key blank to use free mode.
 
 ![TeamsLingo settings page](docs/images/settings-page.png)
 
@@ -39,13 +39,13 @@ A browser extension for real-time translation of Microsoft Teams live captions o
 
 ---
 
-## API Configuration
+## Translation Service Configuration
 
 TeamsLingo supports three types of translation services.
 
-### OpenAI-compatible / Poe / local LLM API
+### OpenAI-compatible APIs, Poe, and local LLM services
 
-Two OpenAI-compatible request formats are supported.
+TeamsLingo supports two OpenAI-compatible request formats.
 
 **Chat Completions API:**
 
@@ -70,16 +70,16 @@ The request body includes `model`, `temperature`, and `input`. If the endpoint i
 **Poe example configuration:**
 
 ```text
-Translation Service: OpenAI-compatible / Poe
+Translation Service: OpenAI-compatible API / Poe
 API Format: Responses API
 API Endpoint / Base URL: https://api.poe.com/v1
 Model: gpt-4o-mini
 ```
 
-**Local LLM API example configuration:**
+**Local LLM service example configuration:**
 
 ```text
-Translation Service: OpenAI-compatible / Poe
+Translation Service: OpenAI-compatible API / Poe
 API Format: Chat Completions API
 API Endpoint / Base URL: http://localhost:11434/v1
 Model: gemma3:4b
@@ -87,31 +87,55 @@ Model: gemma3:4b
 
 ### Google Translate
 
-Uses Google Cloud Translation Basic v2:
+By default, TeamsLingo uses the free Google web translate path:
+
+```http
+POST https://translate.googleapis.com/translate_a/t?client=gtx&dt=t&sl=auto&tl=zh-CN
+Content-Type: application/x-www-form-urlencoded
+```
+
+**Free mode example configuration:**
+
+```text
+Translation Service: Google Translate
+API Endpoint / Base URL: (leave blank, or https://translate.googleapis.com/translate_a/t)
+API Key: leave blank
+```
+
+If you provide an API key, the extension switches to the official Google Cloud Translation Basic v2 endpoint:
 
 ```http
 POST https://translation.googleapis.com/language/translate/v2
 ```
 
-**Example configuration:**
-
-```text
-Translation Service: Google Translate
-API Endpoint / Base URL: (leave blank, or https://translation.googleapis.com/language/translate/v2)
-API Key: Google Cloud API key
-```
-
-The extension sends `q`, `target`, and `format=text`. When the source language is fixed, it also sends `source`; for auto-detection, `source` is omitted.
+The extension sends `q` and `target`; when the source language is fixed it also sends `source`, and in auto mode it uses `sl=auto`.
 
 ### Microsoft Translator
 
-Uses Microsoft Translator Text API v3:
+By default, TeamsLingo uses the free Microsoft Edge translate path:
+
+```http
+GET https://edge.microsoft.com/translate/auth
+POST https://api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh-Hans&includeSentenceLength=true
+Authorization: Bearer <edge auth token>
+```
+
+**Free mode example configuration:**
+
+```text
+Translation Service: Microsoft Translator
+API Endpoint / Base URL: (leave blank, or https://api-edge.cognitive.microsofttranslator.com/translate)
+API Key: leave blank
+Microsoft Region: leave blank
+```
+
+If you provide an API key, the extension switches to the official Microsoft Translator Text API v3:
 
 ```http
 POST https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh-Hans
 ```
 
-**Example configuration:**
+**Official API mode example configuration:**
 
 ```text
 Translation Service: Microsoft Translator
@@ -120,7 +144,10 @@ API Key: Azure Translator key
 Microsoft Region: Fill in per your Azure resource; leave blank for global single-service Translator
 ```
 
-The extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specified, `Ocp-Apim-Subscription-Region` is also sent.
+In free mode, the extension first fetches an Edge web translate token and then calls `api-edge.cognitive.microsofttranslator.com`. `Microsoft Region` is only used for the official API flow.
+
+> The free web translate path is based on unofficial web endpoints and may be rate-limited or changed by the provider. If you need a more stable SLA, use an official paid API key.
+In official API mode, the extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specified, it also sends `Ocp-Apim-Subscription-Region`.
 
 ---
 
@@ -139,19 +166,19 @@ The extension sends `Ocp-Apim-Subscription-Key`. If a Microsoft Region is specif
 
 - **Edge / Chrome ready** — Can be installed as an unpacked extension in Microsoft Edge and Google Chrome.
 - **Real-time caption translation** — Monitors Teams live captions and translates each completed sentence automatically.
-- **Multiple translation engines** — Supports OpenAI, OpenAI-compatible APIs (including Poe and local LLM APIs), Google Cloud Translation, and Microsoft Translator.
+- **Multiple translation engines** — Supports free Google / Microsoft web translation, OpenAI and compatible APIs (including Poe and local LLM services), and the official Google Cloud Translation / Microsoft Translator APIs.
 - **Configurable language pair** — Auto-detect or fix the source language; choose from a wide range of target languages.
 - **Smart deduplication** — Avoids redundant translations when Teams redraws its caption list.
 - **Side-by-side display** — Translations appear alongside original captions and in a floating side panel for easy comparison.
-- **Bilingual interface** — Extension UI available in English and 中文 (Chinese).
-- **Privacy-first** — All API configuration is stored locally. Caption text is sent only to the translation API you configure — no middlemen, no analytics.
+- **Multilingual interface** — Extension UI available in English, 中文 (Chinese), and 日本語 (Japanese).
+- **Privacy-first** — All translation settings are stored locally. Caption text is sent only to the translation service you configure — no middlemen, no analytics.
 
 ---
 
 ## Notes
 
 - This browser extension can be installed in Microsoft Edge and Google Chrome, but it only works on Teams **Web** pages (teams.microsoft.com / teams.cloud.microsoft / teams.live.com) — it does not support the Teams desktop client.
-- Because the translation API endpoint is fully user-configurable, the extension declares broad `http/https` host permissions so the background service worker can make requests to your chosen API.
+- Because the translation service endpoint is fully user-configurable, the extension declares broad `http/https` host permissions so the background service worker can make requests to your chosen service.
 
 ---
 
@@ -162,4 +189,6 @@ TeamsLingo does not collect, store, or transmit any personal data. See [PRIVACY_
 ## Links
 
 - **GitHub:** https://github.com/Amoiensis/TeamsLingo
+- **Releases:** https://github.com/Amoiensis/TeamsLingo/releases
+- **Update guide:** [docs/UPDATE_GUIDE.en.md](docs/UPDATE_GUIDE.en.md)
 - **Issues:** https://github.com/Amoiensis/TeamsLingo/issues

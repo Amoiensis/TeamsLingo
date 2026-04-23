@@ -8,7 +8,7 @@
     "description": "在空间有限处显示的扩展短名称。"
   },
   "extensionDescription": {
-    "message": "Microsoft Teams Web 实时字幕翻译浏览器扩展。支持 OpenAI、本地 LLM API、Google 翻译和微软翻译 API。",
+    "message": "Microsoft Teams Web 实时字幕翻译浏览器扩展。支持 Google 翻译、微软翻译和 OpenAI 兼容 API。",
     "description": "显示在 manifest 和扩展商店中的扩展描述。"
   },
   "extensionActionTitle": {

@@ -8,7 +8,7 @@
     "description": "Short extension name used where UI space is limited."
   },
   "extensionDescription": {
-    "message": "Real-time translation of Microsoft Teams Web live captions. Supports OpenAI, local LLM, Google Translate, and Microsoft Translator.",
+    "message": "Real-time translation of Microsoft Teams Web live captions. Supports Google Translate, Microsoft Translator, and OpenAI-compatible APIs.",
     "description": "Extension description shown in the manifest and extension store listings."
   },
   "extensionActionTitle": {

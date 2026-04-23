@@ -13,7 +13,7 @@
           <img src="icons/icon128.png" alt="TeamsLingo" class="header-logo">
           <div>
             <h1 data-i18n="options.headerTitle">TeamsLingo 配置</h1>
-            <p data-i18n="options.headerDescription">配置 OpenAI-compatible API 后，在 Teams Web 会议中自动翻译实时字幕。</p>
+            <p data-i18n="options.headerDescription">可直接免费使用 Google 翻译和微软翻译，也支持 OpenAI 兼容 API 与官方付费接口。</p>
           </div>
         </div>
       </header>
@@ -30,6 +30,7 @@
             <select id="uiLanguage">
               <option value="zh-CN" data-i18n="options.uiLanguageZh">中文 / Chinese</option>
               <option value="en" data-i18n="options.uiLanguageEn">English / 英文</option>
+              <option value="ja" data-i18n="options.uiLanguageJa">日本語 / Japanese</option>
             </select>
           </label>
 
@@ -47,9 +48,9 @@
           <label class="field">
             <span data-i18n="options.provider">翻译服务</span>
             <select id="provider">
-              <option value="openai">OpenAI-compatible / Poe</option>
-              <option value="google">Google Translate</option>
-              <option value="microsoft">Microsoft Translator</option>
+              <option value="openai" data-i18n="options.providerOpenAI">OpenAI 兼容 API / Poe</option>
+              <option value="google" data-i18n="options.providerGoogle">Google 翻译</option>
+              <option value="microsoft" data-i18n="options.providerMicrosoft">微软翻译</option>
             </select>
           </label>
 
@@ -62,25 +63,30 @@
           </label>
         </div>
 
-        <div class="grid">
-          <label class="field">
-            <span data-i18n="options.endpoint">API Endpoint 或 Base URL</span>
-            <input id="endpoint" type="url" placeholder="https://api.openai.com/v1/chat/completions" autocomplete="off">
-            <small id="endpointHelp" data-i18n="options.endpointHelpResponses">Responses API 可填 https://api.poe.com/v1，插件会自动请求 /responses。</small>
-          </label>
+        <details id="providerAdvanced" class="provider-advanced" open>
+          <summary data-i18n="options.advancedSettings">高级设置</summary>
+          <div class="provider-advanced-body">
+            <div class="grid">
+              <label class="field">
+                <span data-i18n="options.endpoint">API Endpoint 或 Base URL</span>
+                <input id="endpoint" type="url" placeholder="https://api.openai.com/v1/chat/completions" autocomplete="off">
+                <small id="endpointHelp" data-i18n="options.endpointHelpResponses">Responses API 可填 https://api.poe.com/v1，插件会自动请求 /responses。</small>
+              </label>
 
-          <label class="field provider-microsoft" hidden>
-            <span data-i18n="options.microsoftRegion">Microsoft Region</span>
-            <input id="microsoftRegion" type="text" placeholder="例如: eastus" autocomplete="off" data-i18n-placeholder="options.microsoftRegionPlaceholder">
-            <small data-i18n="options.microsoftRegionHelp">区域资源或多服务资源需要填写；全局单服务 Translator 可留空。</small>
-          </label>
-        </div>
+              <label class="field provider-microsoft" hidden>
+                <span data-i18n="options.microsoftRegion">Microsoft Region</span>
+                <input id="microsoftRegion" type="text" placeholder="例如: eastus" autocomplete="off" data-i18n-placeholder="options.microsoftRegionPlaceholder">
+                <small data-i18n="options.microsoftRegionHelp">仅官方 Azure Translator Key 模式需要；免费 Edge 翻译可留空。</small>
+              </label>
+            </div>
 
-        <label class="field">
-          <span data-i18n="options.apiKey">API Key</span>
-          <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off">
-          <small data-i18n="options.apiKeyHelp">Key 保存在此浏览器扩展的本地存储中。</small>
-        </label>
+            <label class="field">
+              <span data-i18n="options.apiKey">API Key</span>
+              <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off">
+              <small data-i18n="options.apiKeyHelp">OpenAI 兼容 API 通常需要填写；Google / Microsoft 留空则走免费网页翻译通道。</small>
+            </label>
+          </div>
+        </details>
 
         <label class="field provider-openai">
           <span data-i18n="options.model">Model</span>
@@ -150,10 +156,54 @@
         <div id="message" class="message" role="status" aria-live="polite"></div>
       </form>
 
-    <footer class="footer">
-      <span class="footer-version">v1.0.1</span>
+      <section class="update-card" aria-labelledby="updateTitle">
+        <div class="update-card-header">
+          <div>
+            <h2 id="updateTitle" data-i18n="options.updateTitle">版本更新</h2>
+            <p data-i18n="options.updateDescription">检查 GitHub Releases 是否有新的正式版本；如有更新，可直接跳转查看发布说明和更新指引。</p>
+          </div>
+          <button id="checkUpdate" type="button" class="secondary" data-i18n="options.updateCheck">检查更新</button>
+        </div>
+
+        <div class="update-meta">
+          <div class="update-meta-item">
+            <span data-i18n="options.currentVersion">当前版本</span>
+            <strong id="currentVersion">v1.0.2</strong>
+          </div>
+          <div class="update-meta-item">
+            <span data-i18n="options.latestVersion">最新正式版</span>
+            <strong id="latestVersion" data-i18n="options.updateLatestUnknown">未确认</strong>
+          </div>
+        </div>
+
+        <div id="updateStatus" class="update-status" role="status" aria-live="polite"></div>
+
+        <div class="update-links">
+          <a
+            id="releaseLink"
+            class="button-link secondary-link"
+            href="https://github.com/Amoiensis/TeamsLingo/releases"
+            target="_blank"
+            rel="noopener"
+            hidden
+            data-i18n="options.updateViewRelease"
+          >查看发布说明</a>
+          <a
+            id="updateGuideLink"
+            class="button-link secondary-link"
+            href="https://github.com/Amoiensis/TeamsLingo/blob/main/docs/UPDATE_GUIDE.md"
+            target="_blank"
+            rel="noopener"
+            hidden
+            data-i18n="options.updateViewGuide"
+          >查看更新指引</a>
+        </div>
+      </section>
+
+      <footer class="footer">
+      <span id="footerVersion" class="footer-version">v1.0.2</span>
       <a href="https://github.com/Amoiensis/TeamsLingo" target="_blank" rel="noopener" class="footer-link">GitHub</a>
-    </footer>
+      </footer>
     </main>
     <script src="ui-i18n.js"></script>
     <script src="languages.js"></script>
